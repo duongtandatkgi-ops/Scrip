@@ -1,1 +1,229 @@
---[[ .____ ________ ___. _____ __ | | __ _______ \_____ \\_ |___/ ____\_ __ ______ ____ _____ _/ |_ ___________ | | | | \__ \ / | \| __ \ __\ | \/ ___// ___\\__ \\ __\/ _ \_ __ \ | |___| | // __ \_/ | \ \_\ \ | | | /\___ \\ \___ / __ \| | ( <_> ) | \/ |_______ \____/(____ /\_______ /___ /__| |____//____ >\___ >____ /__| \____/|__| \/ \/ ​​\/ ​​\/ ​​\/ ​​\/ ​​\/ Chào mừng đến với LuaObfuscator.com (Phiên bản Alpha 0.10.9) ~ Trân trọng, Ferib ]]-- local v0=game:GetService("Players");local v1=game:GetService("RunService");local v2=v0.LocalPlayer;local v3=Instance.new("ScreenGui",game.CoreGui);v3.Name="Follow_GUI_Hybrid";local v5=Instance.new("Frame",v3);v5.Size=UDim2.new(0 -0 ,189 + 31 ,0,190);v5.Position=UDim2.new(350.8 -(87 + 263) ,0,0.4,180 -(67 + 113) );v5.BackgroundColor3=Color3.fromRGB(25,19 + 6 ,73 -43 );v5.Active=true;v5.Draggable=true;Instance.new("UICorner",v5).CornerRadius=UDim.new(0 + 0 ,31 -23 );local v12=Instance.new("TextButton",v5);v12.Size=UDim2.new(0,30,952 -(802 + 150) ,80 -50 );v12.Position=UDim2.new(1 -0 , -35,0 + 0 ,1002 -(915 + 82) );v12.Text="-";v12.BackgroundColor3=Color3.fromRGB(566 -366 ,30 + 20 ,50);v12.TextColor3=Color3.new(1 -0 ,1,1);v12.Font=Enum.Font.GothamBold;v12.TextSize=1205 -(1069 + 118) ;Instance.new("UICorner",v12).CornerRadius=UDim.new(0 -0 ,10 -5 );local v22=Instance.new("TextLabel",v5);v22.Size=UDim2.new(0.8,0 + 0 ,0 -0 ,30 + 0 );v22.Position=UDim2.new(791.05 -(368 + 423) ,0,0.05 -0 ,18 -(10 + 8) );v22.Text="Mục tiêu: Chưa có";v22.TextColor3=Color3.new(1,3 -2 ,443 -(416 + 26) );v22.BackgroundTransparency=3 -2 ;v22.Font=Enum.Font.GothamBold;v22.TextSize=6 + 7 ;v22.TextXAlignment=Enum.TextXAlignment.Left;local v32=Instance.new("TextBox",v5);v32.Size=UDim2.new(0.9 -0 ,438 -(145 + 293) ,0,35);v32.Position=UDim2.new(430.05 -(44 + 386) ,0,1486.25 -(998 + 488) ,0 + 0 );v32.PlaceholderText="Nhập tên người chơi...";v32.Text="";v32.BackgroundColor3=Color3.fromRGB(41 + 9 ,822 -(201 + 571) ,1198 -(116 + 1022) );v32.TextColor3=Color3.new(4 -3 ,1 + 0 ,1);v32.Font=Enum.Font.Gotham;v32.TextSize=43 -31 ;Instance.new("UICorner",v32).CornerRadius=UDim.new(0 -0 ,864 -(814 + 45) );local v43=Instance.new("TextBox",v5);v43.Size=UDim2.new(0.9,0 -0 ,0 + 0 ,13 + 22 );v43.Position=UDim2.new(885.05 -(261 + 624) ,0 -0 ,1080.5 -(1020 + 60) ,1423 -(630 + 793) );v43.PlaceholderText="Tốc độ bay (Mặc định: 60)";v43.Text="";v43.BackgroundColor3=Color3.fromRGB(169 -119 ,236 -186 ,24 + 36 );v43.TextColor3=Color3.new(3 -2 ,1748 -(760 + 987) ,1914 -(1789 + 124) );v43.Font=Enum.Font.Gotham;v43.TextSize=778 -(745 + 21) ;Instance.new("UICorner",v43).CornerRadius=UDim.new(0 + 0 ,5);local v53=Instance.new("TextButton",v5);v53.Size=UDim2.new(0.9 -0 ,0,0,137 -102 );v53.Position=UDim2.new(0.05,0,0.75 + 0 ,0 + 0 );v53.Text="BÁM LƯNG: [ TẮT ]";v53.BackgroundColor3=Color3.fromRGB(50,50,1115 -(87 + 968) );v53.TextColor3=Color3.new(4 -3 ,1 + 0 ,2 -1 );v53.Font=Enum.Font.GothamBold;v53.TextSize=13;Instance.new("UICorner",v53).CornerRadius=UDim.new(1413 -(447 + 966) ,5);local v62=false;local v63=nil;local v64=false;local v65={};local v66=false;v12.MouseButton1Click:Connect(function() local v69=0 -0 ;while true do if (v69==(1817 -(1703 + 114))) then v64= not v64;if v64 then local v111=0;while true do if (v111==(703 -(376 + 325))) then v12.Text="+";v12.BackgroundColor3=Color3.fromRGB(81 -31 ,615 -415 ,50);break;end if (v111==(1 + 0)) then v43.Visible=false;v53.Visible=false;v111=2;end if (v111==0) then v5.Size=UDim2.new(0 -0 ,220,14 -(9 + 5) ,40);v32.Visible=false;v111=1;end end else local v112=0;while true do if (1==v112) then v43.Visible=true;v53.Visible=true;v112=378 -(85 + 291) ;end if (v112==(1265 -(243 + 1022))) then v5.Size=UDim2.new(0 -0 ,220,0,157 + 33 );v32.Visible=true;v112=1181 -(1123 + 57) ;end if (v112==(2 + 0)) then v12.Text="-";v12.BackgroundColor3=Color3.fromRGB(454 -(163 + 91) ,50,1980 -(1869 + 61) );break;end end end break;end end end);v32.FocusLost:Connect(function() local v70=0 + 0 ;local v71;local v72;while true do if (v70==(0 -0)) then v71=string.lower(v32.Text);v72=false;v70=1 -0 ;end if (v70==1) then if (v71~="") then for v115,v116 in pairs(v0:GetPlayers()) do if ((v116~=v2) and (string.lower(v116.Name):match("^" .. v71 ) or string.lower(v116.DisplayName):match("^" .. v71 ))) then v63=v116;v22.Text="Mục tiêu: " .. v116.DisplayName ;v72=true;break;end end end if not v72 then v63=nil;v22.Text="Mục tiêu: Không tìm thấy";end break;end end end);local function v67() for v92,v93 in pairs(v65) do if (v93 and v93.Parent) then v93:Destroy();end end table.clear(v65);local v73=v2.Character;if (v73 and v73:FindFirstChild("Humanoid")) then v73.Humanoid.PlatformStand=false;end v66=false;end local function v68(v74) v67();local v75=Instance.new("Attachment",v74);local v76=Instance.new("LinearVelocity",v74);v76.Attachment0=v75;v76.MaxForce=math.huge;v76.VelocityConstraintMode=Enum.VelocityConstraintMode.Vector;v76.RelativeTo=Enum.ActuatorRelativeTo.World;local v84=Instance.new("AlignOrientation",v74);v84.Attachment0=v75;v84.Mode=Enum.OrientationAlignmentMode.OneAttachment;v84.MaxTorque=math.huge;v84.MaxAngularVelocity=math.huge;table.insert(v65,v75);table.insert(v65,v76);table.insert(v65,v84);local v90=v74.Parent:FindFirstChild("Humanoid");if v90 then v90.PlatformStand=true;end return v76,v84;end v53.MouseButton1Click:Connect(function() local v91=0 + 0 ;while true do if (v91==2) then if v62 then local v114=v2.Character;if (v114 and v114:FindFirstChild("HumanoidRootPart")) then v68(v114.HumanoidRootPart);end else v67();end break;end if (v91==(1 -0)) then v53.Text=(v62 and "BÁM LƯNG: [ BẬT ]") or "BÁM LƯNG: [ TẮT ]" ;v53.BackgroundColor3=(v62 and Color3.fromRGB(0,160 + 10 ,1729 -(1329 + 145) )) or Color3.fromRGB(1021 -(140 + 831) ,1900 -(1409 + 441) ,778 -(15 + 703) ) ;v91=2;end if (v91==0) then if not v63 then return;end v62= not v62;v91=1;end end end);v1.Heartbeat:Connect(function() if (v62 and v63) then local v96,v97=v2.Character,v63.Character;if (v96 and v97 and v96:FindFirstChild("HumanoidRootPart") and v97:FindFirstChild("HumanoidRootPart")) then local v102=0 + 0 ;local v103;local v104;local v105;local v106;local v107;while true do if (v102==(440 -(262 + 176))) then if ( not v106 or not v107) then v106,v107=v68(v103);end if (v105>(1736 -(345 + 1376))) then v66=false;local v142=tonumber(v43.Text) or (748 -(198 + 490)) ;local v143=(v104.Position-v103.Position).Unit;local v144=v143;local v145=RaycastParams.new();v145.FilterDescendantsInstances={v96,v97};v145.FilterType=Enum.RaycastFilterType.Exclude;local v149=workspace:Raycast(v103.Position,v143 * math.clamp(v142 * (0.3 -0) ,1211 -(696 + 510) ,31 -16 ) ,v145);if v149 then local v153=1262 -(1091 + 171) ;local v154;while true do if (0==v153) then v154=workspace:Raycast(v103.Position,Vector3.new(0,3 + 12 ,0 -0 ),v145);if not v154 then v144=(Vector3.new(0,1,0) + (v143 * (0.3 -0))).Unit;else v144=(v103.CFrame.RightVector + (v143 * (374.3 -(123 + 251)))).Unit;end break;end end end v106.VectorVelocity=v144 * v142 ;local v151=Vector3.new(v143.X,0,v143.Z);if (v151.Magnitude>0.001) then v107.CFrame=CFrame.lookAt(v103.Position,v103.Position + v151 );end else local v152=0 -0 ;while true do if ((698 -(208 + 490))==v152) then v66=true;v106.VectorVelocity=Vector3.zero;break;end end end break;end if ((1 + 0)==v102) then v106=v103:FindFirstChildOfClass("LinearVelocity");v107=v103:FindFirstChildOfClass("AlignOrientation");v102=1 + 1 ;end if ((836 -(660 + 176))==v102) then v103,v104=v96.HumanoidRootPart,v97.HumanoidRootPart;v105=(v104.Position-v103.Position).Magnitude;v102=1 + 0 ;end end elseif ( not v96 or not v96:FindFirstChild("HumanoidRootPart")) then v62=false;v53.Text="BÁM LƯNG: [ TẮT ]";v53.BackgroundColor3=Color3.fromRGB(252 -(14 + 188) ,50,735 -(534 + 141) );v67();end end end);v1.RenderStepped:Connect(function() if (v62 and v66 and v63) then local v98,v99=v2.Character,v63.Character;if (v98 và v99 và v98:FindFirstChild("HumanoidRootPart") và v99:FindFirstChild("HumanoidRootPart")) thì local v108=0;local v109;local v110;trong khi đúng thì nếu (v108==(1 + 1)) thì v109.RotVelocity=Vector3.zero;break;kết thúc nếu (v108==1) thì v109.CFrame=v110.CFrame * CFrame.new(0,0 + 0 ,5) ;v109.Velocity=Vector3.zero;v108=2;kết thúc nếu (v108==(0 + 0)) thì v109=v98.HumanoidRootPart;v110=v99.HumanoidRootPart;v108=1;kết thúc kết thúc kết thúc kết thúc);FilterDescendantsInstances={v96,v97};v145.FilterType=Enum.RaycastFilterType.Exclude;local v149=workspace:Raycast(v103.Position,v143 * math.clamp(v142 * (0.3 -0) ,1211 -(696 + 510) ,31 -16 ) ,v145);if v149 then local v153=1262 -(1091 + 171) ;local v154;while true do if (0==v153) then v154=workspace:Raycast(v103.Position,Vector3.new(0,3 + 12 ,0 -0 ),v145);if not v154 then v144=(Vector3.new(0,1,0) + (v143 * (0.3 -0))).Unit;else v144=(v103.CFrame.RightVector + (v143 * (374.3 -(123 + 251)))).Unit;end break;end end end v106.VectorVelocity=v144 * v142 ;local v151=Vector3.new(v143.X,0,v143.Z);if (v151.Magnitude>0.001) then v107.CFrame=CFrame.lookAt(v103.Position,v103.Position + v151 );end else local v152=0 -0 ;while true do if ((698 -(208 + 490))==v152) then v66=true;v106.VectorVelocity=Vector3.zero;break;end end end break;end if ((1 + 0)==v102) then v106=v103:FindFirstChildOfClass("LinearVelocity");v107=v103:FindFirstChildOfClass("AlignOrientation");v102=1 + 1 ;end if ((836 -(660 + 176))==v102) then v103,v104=v96.HumanoidRootPart,v97.HumanoidRootPart;v105=(v104.Position-v103.Position).Magnitude;v102=1 + 0 ;end end elseif ( not v96 or not v96:FindFirstChild("HumanoidRootPart")) then v62=false;v53.Text="BÁM LƯNG: [ TẮT ]";v53.BackgroundColor3=Color3.fromRGB(252 -(14 + 188) ,50,735 -(534 + 141) );v67();end end end);v1.RenderStepped:Connect(function() if (v62 and v66 and v63) then local v98,v99=v2.Character,v63.Character;if (v98 and v99 and v98:FindFirstChild("HumanoidRootPart") and v99:FindFirstChild("HumanoidRootPart")) then local v108=0;local v109;local v110;while true do if (v108==(1 + 1)) then v109.RotVelocity=Vector3.zero;break;end if (v108==1) then v109.CFrame=v110.CFrame * CFrame.new(0,0 + 0 ,5) ;v109.Velocity=Vector3.zero;v108=2;end if (v108==(0 + 0)) then v109=v98.HumanoidRootPart;v110=v99.HumanoidRootPart;v108=1;end end end end end);FilterDescendantsInstances={v96,v97};v145.FilterType=Enum.RaycastFilterType.Exclude;local v149=workspace:Raycast(v103.Position,v143 * math.clamp(v142 * (0.3 -0) ,1211 -(696 + 510) ,31 -16 ) ,v145);if v149 then local v153=1262 -(1091 + 171) ;local v154;while true do if (0==v153) then v154=workspace:Raycast(v103.Position,Vector3.new(0,3 + 12 ,0 -0 ),v145);if not v154 then v144=(Vector3.new(0,1,0) + (v143 * (0.3 -0))).Unit;else v144=(v103.CFrame.RightVector + (v143 * (374.3 -(123 + 251)))).Unit;end break;end end end v106.VectorVelocity=v144 * v142 ;local v151=Vector3.new(v143.X,0,v143.Z);if (v151.Magnitude>0.001) then v107.CFrame=CFrame.lookAt(v103.Position,v103.Position + v151 );end else local v152=0 -0 ;while true do if ((698 -(208 + 490))==v152) then v66=true;v106.VectorVelocity=Vector3.zero;break;end end end break;end if ((1 + 0)==v102) then v106=v103:FindFirstChildOfClass("LinearVelocity");v107=v103:FindFirstChildOfClass("AlignOrientation");v102=1 + 1 ;end if ((836 -(660 + 176))==v102) then v103,v104=v96.HumanoidRootPart,v97.HumanoidRootPart;v105=(v104.Position-v103.Position).Magnitude;v102=1 + 0 ;end end elseif ( not v96 or not v96:FindFirstChild("HumanoidRootPart")) then v62=false;v53.Text="BÁM LƯNG: [ TẮT ]";v53.BackgroundColor3=Color3.fromRGB(252 -(14 + 188) ,50,735 -(534 + 141) );v67();end end end);v1.RenderStepped:Connect(function() if (v62 and v66 and v63) then local v98,v99=v2.Character,v63.Character;if (v98 and v99 and v98:FindFirstChild("HumanoidRootPart") and v99:FindFirstChild("HumanoidRootPart")) then local v108=0;local v109;local v110;while true do if (v108==(1 + 1)) then v109.RotVelocity=Vector3.zero;break;end if (v108==1) then v109.CFrame=v110.CFrame * CFrame.new(0,0 + 0 ,5) ;v109.Velocity=Vector3.zero;v108=2;end if (v108==(0 + 0)) then v109=v98.HumanoidRootPart;v110=v99.HumanoidRootPart;v108=1;end end end end end);HumanoidRootPart;v105=(v104.Position-v103.Position).Magnitude;v102=1 + 0 ;end end elseif ( not v96 or not v96:FindFirstChild("HumanoidRootPart")) then v62=false;v53.Text="BÁM LƯNG: [ TẮT ]";v53.BackgroundColor3=Color3.fromRGB(252 -(14 + 188) ,50,735 -(534 + 141) );v67();end end end);v1.RenderStepped:Connect(function() if (v62 and v66 and v63) then local v98,v99=v2.Character,v63.Character;if (v98 and v99 and v98:FindFirstChild("HumanoidRootPart") and v99:FindFirstChild("HumanoidRootPart")) then local v108=0;local v109;local v110;while true do if (v108==(1 + 1)) then v109.RotVelocity=Vector3.zero;break;end if (v108==1) then v109.CFrame=v110.CFrame * CFrame.new(0,0 + 0 ,5) ;v109.Velocity=Vector3.zero;v108=2;end if (v108==(0 + 0)) then v109=v98.HumanoidRootPart;v110=v99.HumanoidRootPart;v108=1;end end end end end);HumanoidRootPart;v105=(v104.Position-v103.Position).Magnitude;v102=1 + 0 ;end end elseif ( not v96 or not v96:FindFirstChild("HumanoidRootPart")) then v62=false;v53.Text="BÁM LƯNG: [ TẮT ]";v53.BackgroundColor3=Color3.fromRGB(252 -(14 + 188) ,50,735 -(534 + 141) );v67();end end end);v1.RenderStepped:Connect(function() if (v62 and v66 and v63) then local v98,v99=v2.Character,v63.Character;if (v98 and v99 and v98:FindFirstChild("HumanoidRootPart") and v99:FindFirstChild("HumanoidRootPart")) then local v108=0;local v109;local v110;while true do if (v108==(1 + 1)) then v109.RotVelocity=Vector3.zero;break;end if (v108==1) then v109.CFrame=v110.CFrame * CFrame.new(0,0 + 0 ,5) ;v109.Velocity=Vector3.zero;v108=2;end if (v108==(0 + 0)) then v109=v98.HumanoidRootPart;v110=v99.HumanoidRootPart;v108=1;end end end end end);
+--[[ .____ ________ ___. _____ __ | | __ _______ \_____ \\_ |___/ ____\_ __ ______ ____ _____ _/ |_ ___________ | | | | \__ \ / | \| __ \ __\ | \/ ___// ___\\__ \\ __\/ _ \_ __ \ | |___| | // __ \_/ | \ \_\ \ | | | /\___ \\ \___ / __ \| | ( <_> ) | \/ |_______ \____/(____ /\_______ /___ /__| |____//____ >\___ >____ /__| \____/|__| \/ \/ ​​\/ ​​\/ ​​\/ ​​\/ ​​\/ Chào mừng đến với LuaObfuscator.com (Phiên bản Alpha 0.10.9) ~ Trân trọng, Ferib ]]-- 
+local v0 = game:GetService("Players")
+local v1 = game:GetService("RunService")
+local v2 = v0.LocalPlayer
+
+local v3 = Instance.new("ScreenGui", game.CoreGui)
+v3.Name = "Follow_GUI_Hybrid"
+
+local v5 = Instance.new("Frame", v3)
+v5.Size = UDim2.new(0, 220, 0, 190)
+v5.Position = UDim2.new(0.8, 0, 0.4, 0)
+v5.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+v5.Active = true
+v5.Draggable = true
+Instance.new("UICorner", v5).CornerRadius = UDim.new(0, 8)
+
+local v12 = Instance.new("TextButton", v5)
+v12.Size = UDim2.new(0, 30, 0, 30)
+v12.Position = UDim2.new(1, -35, 0, 5)
+v12.Text = "-"
+v12.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+v12.TextColor3 = Color3.new(1, 1, 1)
+v12.Font = Enum.Font.GothamBold
+v12.TextSize = 18
+Instance.new("UICorner", v12).CornerRadius = UDim.new(0, 5)
+
+local v22 = Instance.new("TextLabel", v5)
+v22.Size = UDim2.new(0.8, 0, 0, 30)
+v22.Position = UDim2.new(0.05, 0, 0.05, 0)
+v22.Text = "Mục tiêu: Chưa có"
+v22.TextColor3 = Color3.new(1, 1, 1)
+v22.BackgroundTransparency = 1
+v22.Font = Enum.Font.GothamBold
+v22.TextSize = 13
+v22.TextXAlignment = Enum.TextXAlignment.Left
+
+local v32 = Instance.new("TextBox", v5)
+v32.Size = UDim2.new(0.9, 0, 0, 35)
+v32.Position = UDim2.new(0.05, 0, 0.25, 0)
+v32.PlaceholderText = "Nhập tên người chơi..."
+v32.Text = ""
+v32.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+v32.TextColor3 = Color3.new(1, 1, 1)
+v32.Font = Enum.Font.Gotham
+v32.TextSize = 12
+Instance.new("UICorner", v32).CornerRadius = UDim.new(0, 5)
+
+local v43 = Instance.new("TextBox", v5)
+v43.Size = UDim2.new(0.9, 0, 0, 35)
+v43.Position = UDim2.new(0.05, 0, 0.5, 0)
+v43.PlaceholderText = "Tốc độ bay (Mặc định: 60)"
+v43.Text = ""
+v43.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+v43.TextColor3 = Color3.new(1, 1, 1)
+v43.Font = Enum.Font.Gotham
+v43.TextSize = 12
+Instance.new("UICorner", v43).CornerRadius = UDim.new(0, 5)
+
+local v53 = Instance.new("TextButton", v5)
+v53.Size = UDim2.new(0.9, 0, 0, 35)
+v53.Position = UDim2.new(0.05, 0, 0.75, 0)
+v53.Text = "BÁM LƯNG: [ TẮT ]"
+v53.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+v53.TextColor3 = Color3.new(1, 1, 1)
+v53.Font = Enum.Font.GothamBold
+v53.TextSize = 13
+Instance.new("UICorner", v53).CornerRadius = UDim.new(0, 5)
+
+local v62 = false
+local v63 = nil
+local v64 = false
+local v65 = {}
+local v66 = false
+
+v12.MouseButton1Click:Connect(function()
+    v64 = not v64
+    if v64 then
+        v5.Size = UDim2.new(0, 220, 0, 40)
+        v32.Visible = false
+        v43.Visible = false
+        v53.Visible = false
+        v12.Text = "+"
+        v12.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+    else
+        v5.Size = UDim2.new(0, 220, 0, 190)
+        v32.Visible = true
+        v43.Visible = true
+        v53.Visible = true
+        v12.Text = "-"
+        v12.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    end
+end)
+
+v32.FocusLost:Connect(function()
+    local v71 = string.lower(v32.Text)
+    local v72 = false
+    if v71 ~= "" then
+        for v115, v116 in pairs(v0:GetPlayers()) do
+            if (v116 ~= v2) and (string.lower(v116.Name):match("^" .. v71) or string.lower(v116.DisplayName):match("^" .. v71)) then
+                v63 = v116
+                v22.Text = "Mục tiêu: " .. v116.DisplayName
+                v72 = true
+                break
+            end
+        end
+    end
+    if not v72 then
+        v63 = nil
+        v22.Text = "Mục tiêu: Không tìm thấy"
+    end
+end)
+
+local function v67()
+    for v92, v93 in pairs(v65) do
+        if v93 and v93.Parent then
+            v93:Destroy()
+        end
+    end
+    table.clear(v65)
+    local v73 = v2.Character
+    if v73 and v73:FindFirstChild("Humanoid") then
+        v73.Humanoid.PlatformStand = false
+    end
+    v66 = false
+end
+
+local function v68(v74)
+    v67()
+    local v75 = Instance.new("Attachment", v74)
+    local v76 = Instance.new("LinearVelocity", v74)
+    v76.Attachment0 = v75
+    v76.MaxForce = math.huge
+    v76.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
+    v76.RelativeTo = Enum.ActuatorRelativeTo.World
+    local v84 = Instance.new("AlignOrientation", v74)
+    v84.Attachment0 = v75
+    v84.Mode = Enum.OrientationAlignmentMode.OneAttachment
+    v84.MaxTorque = math.huge
+    v84.MaxAngularVelocity = math.huge
+    table.insert(v65, v75)
+    table.insert(v65, v76)
+    table.insert(v65, v84)
+    local v90 = v74.Parent:FindFirstChild("Humanoid")
+    if v90 then
+        v90.PlatformStand = true
+    end
+    return v76, v84
+end
+
+v53.MouseButton1Click:Connect(function()
+    if not v63 then return end
+    v62 = not v62
+    
+    if v62 then
+        v53.Text = "BÁM LƯNG: [ BẬT ]"
+        v53.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+        local v114 = v2.Character
+        if v114 and v114:FindFirstChild("HumanoidRootPart") then
+            v68(v114.HumanoidRootPart)
+        end
+    else
+        v53.Text = "BÁM LƯNG: [ TẮT ]"
+        v53.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+        v67()
+    end
+end)
+
+v1.Heartbeat:Connect(function()
+    if v62 and v63 then
+        local v96, v97 = v2.Character, v63.Character
+        if v96 and v97 and v96:FindFirstChild("HumanoidRootPart") and v97:FindFirstChild("HumanoidRootPart") then
+            local v103, v104 = v96.HumanoidRootPart, v97.HumanoidRootPart
+            local v105 = (v104.Position - v103.Position).Magnitude
+            local v106 = v103:FindFirstChildOfClass("LinearVelocity")
+            local v107 = v103:FindFirstChildOfClass("AlignOrientation")
+            
+            if not v106 or not v107 then
+                v106, v107 = v68(v103)
+            end
+            
+            if v105 > 15 then
+                v66 = false
+                local v142 = tonumber(v43.Text) or 60
+                local v143 = (v104.Position - v103.Position).Unit
+                local v144 = v143
+                local v145 = RaycastParams.new()
+                v145.FilterDescendantsInstances = {v96, v97}
+                v145.FilterType = Enum.RaycastFilterType.Exclude
+                
+                local v149 = workspace:Raycast(v103.Position, v143 * math.clamp(v142 * 0.3, 5, 15), v145)
+                if v149 then
+                    local v154 = workspace:Raycast(v103.Position, Vector3.new(0, 15, 0), v145)
+                    if not v154 then
+                        v144 = (Vector3.new(0, 1, 0) + (v143 * 0.3)).Unit
+                    else
+                        v144 = (v103.CFrame.RightVector + (v143 * 0.3)).Unit
+                    end
+                end
+                
+                v106.VectorVelocity = v144 * v142
+                local v151 = Vector3.new(v143.X, 0, v143.Z)
+                if v151.Magnitude > 0.001 then
+                    v107.CFrame = CFrame.lookAt(v103.Position, v103.Position + v151)
+                end
+            else
+                v66 = true
+                v106.VectorVelocity = Vector3.zero
+            end
+        elseif not v96 or not v96:FindFirstChild("HumanoidRootPart") then
+            v62 = false
+            v53.Text = "BÁM LƯNG: [ TẮT ]"
+            v53.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+            v67()
+        end
+    end
+end)
+
+v1.RenderStepped:Connect(function()
+    if v62 and v66 and v63 then
+        local v98, v99 = v2.Character, v63.Character
+        if v98 and v99 and v98:FindFirstChild("HumanoidRootPart") and v99:FindFirstChild("HumanoidRootPart") then
+            local v109 = v98.HumanoidRootPart
+            local v110 = v99.HumanoidRootPart
+            v109.CFrame = v110.CFrame * CFrame.new(0, 0, 5)
+            v109.Velocity = Vector3.zero
+            v109.RotVelocity = Vector3.zero
+        end
+    end
+end)
