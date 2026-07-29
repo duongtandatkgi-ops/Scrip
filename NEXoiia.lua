@@ -1,18 +1,52 @@
---[[ .____ ________ ___. _____ __ | | __ _______ \_____ \\_ |___/ ____\_ __ ______ ____ _____ _/ |_ ___________ | | | | \__ \ / | \| __ \ __\ | \/ ___// ___\\__ \\ __\/ _ \_ __ \ | |___| | // __ \_/ | \ \_\ \ | | | /\___ \\ \___ / __ \| | ( <_> ) | \/ |_______ \____/(____ /\_______ /___ /__| |____//____ >\___ >____ /__| \____/|__| \/ \/ ​​\/ ​​\/ ​​\/ ​​\/ ​​\/ Chào mừng đến với LuaObfuscator.com (Phiên bản Alpha 0.10.9) ~ Trân trọng, Ferib ]]-- 
+--[[ .____ ________ ___. _____ __ | | __ _______ \_____ \\_ |___/ ____\_ __ ______ ____ _____ _/ |_ ___________ | | | | \__ \ / | \| __ \ __\ | \/ ___// ___\\__ \\ __\/ _ \_ __ \ | |___| | // __ \_/ | \ \_\ \ | | | /\___ \\ \___ / __ \| | ( <_> ) | \/ |_______ \____/(____ /\_______ /___ /__| |____//____ >\___ >____ /__| \____/|__| \/ \/ ​​\/ ​​\/ ​​\/ ​​\/ ​​\/
+    BẢN NÂNG CẤP: THÊM Ô KHOẢNG CÁCH & HIỆN ICON RƠI
+]]-- 
+
 local v0 = game:GetService("Players")
 local v1 = game:GetService("RunService")
+local v130 = game:GetService("TweenService")
 local v2 = v0.LocalPlayer
 
 local v3 = Instance.new("ScreenGui", game.CoreGui)
-v3.Name = "Follow_GUI_Hybrid"
+v3.Name = "Follow_GUI_Hybrid_Pro"
+v3.ResetOnSpawn = false
 
 local v5 = Instance.new("Frame", v3)
-v5.Size = UDim2.new(0, 220, 0, 190)
+v5.Size = UDim2.new(0, 220, 0, 235) -- Mở rộng chiều cao để chứa thêm ô khoảng cách
 v5.Position = UDim2.new(0.8, 0, 0.4, 0)
 v5.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 v5.Active = true
 v5.Draggable = true
+v5.ClipsDescendants = true -- Giữ hiệu ứng icon không bị tràn ra ngoài khung
 Instance.new("UICorner", v5).CornerRadius = UDim.new(0, 8)
+
+-- =====================================
+-- HIỆU ỨNG ICON RƠI TRONG GIAO DIỆN LỚN
+-- =====================================
+local EffectFolder = Instance.new("Folder", v5)
+EffectFolder.Name = "FallingIcons"
+local IconsList = {"✨", "🍃", "💫", "⭐", "❄️"}
+
+task.spawn(function()
+    while task.wait(0.4) do
+        if v5.Visible and not v64 then
+            local icon = Instance.new("TextLabel", EffectFolder)
+            icon.Text = IconsList[math.random(1, #IconsList)]
+            icon.BackgroundTransparency = 1
+            icon.Size = UDim2.new(0, 20, 0, 20)
+            icon.Position = UDim2.new(math.random(1, 90)/100, 0, 0, -20)
+            icon.TextSize = math.random(12, 18)
+            icon.ZIndex = 1
+            
+            local tween = v130:Create(icon, TweenInfo.new(math.random(3, 5), Enum.EasingStyle.Linear), {
+                Position = UDim2.new(icon.Position.X.Scale, 0, 1, 20),
+                Rotation = math.random(90, 360)
+            })
+            tween:Play()
+            tween.Completed:Connect(function() icon:Destroy() end)
+        end
+    end
+end)
 
 local v12 = Instance.new("TextButton", v5)
 v12.Size = UDim2.new(0, 30, 0, 30)
@@ -22,48 +56,66 @@ v12.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 v12.TextColor3 = Color3.new(1, 1, 1)
 v12.Font = Enum.Font.GothamBold
 v12.TextSize = 18
+v12.ZIndex = 2
 Instance.new("UICorner", v12).CornerRadius = UDim.new(0, 5)
 
 local v22 = Instance.new("TextLabel", v5)
-v22.Size = UDim2.new(0.8, 0, 0, 30)
-v22.Position = UDim2.new(0.05, 0, 0.05, 0)
+v22.Size = UDim2.new(0.8, 0, 0, 25)
+v22.Position = UDim2.new(0.05, 0, 0.03, 0)
 v22.Text = "Mục tiêu: Chưa có"
 v22.TextColor3 = Color3.new(1, 1, 1)
 v22.BackgroundTransparency = 1
 v22.Font = Enum.Font.GothamBold
-v22.TextSize = 13
+v22.TextSize = 12
 v22.TextXAlignment = Enum.TextXAlignment.Left
+v22.ZIndex = 2
 
 local v32 = Instance.new("TextBox", v5)
-v32.Size = UDim2.new(0.9, 0, 0, 35)
-v32.Position = UDim2.new(0.05, 0, 0.25, 0)
+v32.Size = UDim2.new(0.9, 0, 0, 32)
+v32.Position = UDim2.new(0.05, 0, 0.18, 0)
 v32.PlaceholderText = "Nhập tên người chơi..."
 v32.Text = ""
 v32.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 v32.TextColor3 = Color3.new(1, 1, 1)
 v32.Font = Enum.Font.Gotham
 v32.TextSize = 12
+v32.ZIndex = 2
 Instance.new("UICorner", v32).CornerRadius = UDim.new(0, 5)
 
 local v43 = Instance.new("TextBox", v5)
-v43.Size = UDim2.new(0.9, 0, 0, 35)
-v43.Position = UDim2.new(0.05, 0, 0.5, 0)
+v43.Size = UDim2.new(0.9, 0, 0, 32)
+v43.Position = UDim2.new(0.05, 0, 0.38, 0)
 v43.PlaceholderText = "Tốc độ bay (Mặc định: 60)"
 v43.Text = ""
 v43.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 v43.TextColor3 = Color3.new(1, 1, 1)
 v43.Font = Enum.Font.Gotham
 v43.TextSize = 12
+v43.ZIndex = 2
 Instance.new("UICorner", v43).CornerRadius = UDim.new(0, 5)
+
+-- Ô NHẬP KHOẢNG CÁCH (MỚI THÊM)
+local DistanceInput = Instance.new("TextBox", v5)
+DistanceInput.Size = UDim2.new(0.9, 0, 0, 32)
+DistanceInput.Position = UDim2.new(0.05, 0, 0.58, 0)
+DistanceInput.PlaceholderText = "Khoảng cách bám (Mặc định: 5)"
+DistanceInput.Text = ""
+DistanceInput.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+DistanceInput.TextColor3 = Color3.new(1, 1, 1)
+DistanceInput.Font = Enum.Font.Gotham
+DistanceInput.TextSize = 12
+DistanceInput.ZIndex = 2
+Instance.new("UICorner", DistanceInput).CornerRadius = UDim.new(0, 5)
 
 local v53 = Instance.new("TextButton", v5)
 v53.Size = UDim2.new(0.9, 0, 0, 35)
-v53.Position = UDim2.new(0.05, 0, 0.75, 0)
+v53.Position = UDim2.new(0.05, 0, 0.78, 0)
 v53.Text = "BÁM LƯNG: [ TẮT ]"
 v53.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 v53.TextColor3 = Color3.new(1, 1, 1)
 v53.Font = Enum.Font.GothamBold
 v53.TextSize = 13
+v53.ZIndex = 2
 Instance.new("UICorner", v53).CornerRadius = UDim.new(0, 5)
 
 local v62 = false
@@ -78,13 +130,15 @@ v12.MouseButton1Click:Connect(function()
         v5.Size = UDim2.new(0, 220, 0, 40)
         v32.Visible = false
         v43.Visible = false
+        DistanceInput.Visible = false
         v53.Visible = false
         v12.Text = "+"
         v12.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
     else
-        v5.Size = UDim2.new(0, 220, 0, 190)
+        v5.Size = UDim2.new(0, 220, 0, 235)
         v32.Visible = true
         v43.Visible = true
+        DistanceInput.Visible = true
         v53.Visible = true
         v12.Text = "-"
         v12.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
@@ -221,7 +275,11 @@ v1.RenderStepped:Connect(function()
         if v98 and v99 and v98:FindFirstChild("HumanoidRootPart") and v99:FindFirstChild("HumanoidRootPart") then
             local v109 = v98.HumanoidRootPart
             local v110 = v99.HumanoidRootPart
-            v109.CFrame = v110.CFrame * CFrame.new(0, 0, 5)
+            
+            -- Lấy khoảng cách người dùng nhập vào (Mặc định là 5 nếu bỏ trống hoặc nhập sai)
+            local customDist = tonumber(DistanceInput.Text) or 5
+            
+            v109.CFrame = v110.CFrame * CFrame.new(0, 0, customDist)
             v109.Velocity = Vector3.zero
             v109.RotVelocity = Vector3.zero
         end
