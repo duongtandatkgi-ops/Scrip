@@ -202,7 +202,7 @@ tpGojoToggle.MouseButton1Click:Connect(function()
     end
 end)
 
--- Chức năng TP Gojo liên tục qua mọi người
+-- Chức năng TP Gojo liên tục qua mọi người (TP sát dưới chân & quay mặt lên trên)
 externalTpButton.MouseButton1Click:Connect(function()
     isTpActive = not isTpActive
     if isTpActive then
@@ -216,7 +216,16 @@ externalTpButton.MouseButton1Click:Connect(function()
                     if playerTarget ~= v2 and playerTarget.Character and playerTarget.Character:FindFirstChild("HumanoidRootPart") then
                         local myChar = v2.Character
                         if myChar and myChar:FindFirstChild("HumanoidRootPart") then
-                            myChar.HumanoidRootPart.CFrame = playerTarget.Character.HumanoidRootPart.CFrame
+                            local targetHRP = playerTarget.Character.HumanoidRootPart
+                            local myHRP = myChar.HumanoidRootPart
+                            
+                            -- Vị trí dưới chân người chơi (cách 0 stu ngang, nằm sát dưới chân)
+                            local targetPos = targetHRP.Position
+                            local tpPos = targetHRP.CFrame * CFrame.new(0, -2.5, 0)
+                            
+                            -- Quay mặt thẳng lên trên hướng về phía người bị TP
+                            myHRP.CFrame = CFrame.lookAt(tpPos, targetPos, targetHRP.CFrame.LookVector)
+                            
                             task.wait(0.1) -- Dịch chuyển qua mỗi người 0.1 giây
                         end
                     end
