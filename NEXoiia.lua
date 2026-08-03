@@ -4,7 +4,7 @@
 | |___| | // __ \_/ | \ \_\ \ | | | /\___ \\ \___ / __ \| | ( <_> ) | \/
 |_______ \____/(____ /\_______ /___ /__| |____//____ >\___ >____ /__|
         \____/|__| \/ \/ ​​​​\/ ​​\/ ​​\/ ​​\/ ​​\/
-BẢN NÂNG CẤP: THÊM Ô KHOẢNG CÁCH, HIỆN ICON RƠI & TP GOJO 0.2 GIAI ]]--
+BẢN NÂNG CẤP: THÊM Ô KHOẢNG CÁCH, TỐC ĐỘ TP, HIỆN ICON RƠI & TP GOJO 0.2 GIAI ]]--
 
 local v0 = game:GetService("Players")
 local v1 = game:GetService("RunService")
@@ -16,7 +16,7 @@ v3.Name = "Follow_GUI_Hybrid_Pro"
 v3.ResetOnSpawn = false
 
 local v5 = Instance.new("Frame", v3)
-v5.Size = UDim2.new(0, 220, 0, 280) -- Mở rộng chiều cao thêm để chứa nút mới
+v5.Size = UDim2.new(0, 220, 0, 320) -- Mở rộng chiều cao khung để chứa thêm ô tốc độ TP
 v5.Position = UDim2.new(0.8, 0, 0.4, 0)
 v5.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 v5.Active = true
@@ -70,7 +70,7 @@ Instance.new("UICorner", v12).CornerRadius = UDim.new(0, 5)
 
 local v22 = Instance.new("TextLabel", v5)
 v22.Size = UDim2.new(0.8, 0, 0, 25)
-v22.Position = UDim2.new(0.05, 0, 0.03, 0)
+v22.Position = UDim2.new(0.05, 0, 0.02, 0)
 v22.Text = "Mục tiêu: Chưa có"
 v22.TextColor3 = Color3.new(1, 1, 1)
 v22.BackgroundTransparency = 1
@@ -80,8 +80,8 @@ v22.TextXAlignment = Enum.TextXAlignment.Left
 v22.ZIndex = 2
 
 local v32 = Instance.new("TextBox", v5)
-v32.Size = UDim2.new(0.9, 0, 0, 32)
-v32.Position = UDim2.new(0.05, 0, 0.15, 0)
+v32.Size = UDim2.new(0.9, 0, 0, 30)
+v32.Position = UDim2.new(0.05, 0, 0.10, 0)
 v32.PlaceholderText = "Nhập tên người chơi..."
 v32.Text = ""
 v32.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
@@ -92,8 +92,8 @@ v32.ZIndex = 2
 Instance.new("UICorner", v32).CornerRadius = UDim.new(0, 5)
 
 local v43 = Instance.new("TextBox", v5)
-v43.Size = UDim2.new(0.9, 0, 0, 32)
-v43.Position = UDim2.new(0.05, 0, 0.30, 0)
+v43.Size = UDim2.new(0.9, 0, 0, 30)
+v43.Position = UDim2.new(0.05, 0, 0.21, 0)
 v43.PlaceholderText = "Bay tốc độ (Mặc định: 60)"
 v43.Text = ""
 v43.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
@@ -104,8 +104,8 @@ v43.ZIndex = 2
 Instance.new("UICorner", v43).CornerRadius = UDim.new(0, 5)
 
 local DistanceInput = Instance.new("TextBox", v5)
-DistanceInput.Size = UDim2.new(0.9, 0, 0, 32)
-DistanceInput.Position = UDim2.new(0.05, 0, 0.45, 0)
+DistanceInput.Size = UDim2.new(0.9, 0, 0, 30)
+DistanceInput.Position = UDim2.new(0.05, 0, 0.32, 0)
 DistanceInput.PlaceholderText = "Khoảng cách bám (Mặc định: 5)"
 DistanceInput.Text = ""
 DistanceInput.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
@@ -115,9 +115,22 @@ DistanceInput.TextSize = 12
 DistanceInput.ZIndex = 2
 Instance.new("UICorner", DistanceInput).CornerRadius = UDim.new(0, 5)
 
+-- Ô NHẬP TỐC ĐỘ DỊCH CHUYỂN (DÂN TRỄ TÍNH BẰNG GIÂY)
+local TpSpeedInput = Instance.new("TextBox", v5)
+TpSpeedInput.Size = UDim2.new(0.9, 0, 0, 30)
+TpSpeedInput.Position = UDim2.new(0.05, 0, 0.43, 0)
+TpSpeedInput.PlaceholderText = "Tốc độ TP giây (Mặc định: 0.1)"
+TpSpeedInput.Text = ""
+TpSpeedInput.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+TpSpeedInput.TextColor3 = Color3.new(1, 1, 1)
+TpSpeedInput.Font = Enum.Font.Gotham
+TpSpeedInput.TextSize = 12
+TpSpeedInput.ZIndex = 2
+Instance.new("UICorner", TpSpeedInput).CornerRadius = UDim.new(0, 5)
+
 local v53 = Instance.new("TextButton", v5)
-v53.Size = UDim2.new(0.9, 0, 0, 35)
-v53.Position = UDim2.new(0.05, 0, 0.60, 0)
+v53.Size = UDim2.new(0.9, 0, 0, 32)
+v53.Position = UDim2.new(0.05, 0, 0.55, 0)
 v53.Text = "BÁM LƯNG: [ BẮT ĐẦU ]"
 v53.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 v53.TextColor3 = Color3.new(1, 1, 1)
@@ -130,8 +143,8 @@ Instance.new("UICorner", v53).CornerRadius = UDim.new(0, 5)
 -- NÚT MỚI: TP GOJO 0.2 GIAI
 -- =====================================
 local tpGojoToggle = Instance.new("TextButton", v5)
-tpGojoToggle.Size = UDim2.new(0.9, 0, 0, 35)
-tpGojoToggle.Position = UDim2.new(0.05, 0, 0.77, 0)
+tpGojoToggle.Size = UDim2.new(0.9, 0, 0, 32)
+tpGojoToggle.Position = UDim2.new(0.05, 0, 0.70, 0)
 tpGojoToggle.Text = "TP GOJO 0.2 GIAI: BẬT"
 tpGojoToggle.BackgroundColor3 = Color3.fromRGB(80, 50, 100)
 tpGojoToggle.TextColor3 = Color3.new(1, 1, 1)
@@ -144,7 +157,7 @@ Instance.new("UICorner", tpGojoToggle).CornerRadius = UDim.new(0, 5)
 local externalTpButton = Instance.new("TextButton", v3)
 externalTpButton.Size = UDim2.new(0, 160, 0, 40)
 externalTpButton.Position = UDim2.new(0.5, -80, 0, 20)
-externalTpButton.Text = "TP 0.2 GIAI: [ OFF ]"
+externalTpButton.Text = "TP GOJO: [ OFF ]"
 externalTpButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 externalTpButton.TextColor3 = Color3.new(1, 1, 1)
 externalTpButton.Font = Enum.Font.GothamBold
@@ -169,15 +182,17 @@ v12.MouseButton1Click:Connect(function()
         v32.Visible = false
         v43.Visible = false
         DistanceInput.Visible = false
+        TpSpeedInput.Visible = false
         v53.Visible = false
         tpGojoToggle.Visible = false
         v12.Text = "+"
         v12.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
     else
-        v5.Size = UDim2.new(0, 220, 0, 280)
+        v5.Size = UDim2.new(0, 220, 0, 320)
         v32.Visible = true
         v43.Visible = true
         DistanceInput.Visible = true
+        TpSpeedInput.Visible = true
         v53.Visible = true
         tpGojoToggle.Visible = true
         v12.Text = "-"
@@ -197,20 +212,21 @@ tpGojoToggle.MouseButton1Click:Connect(function()
         tpGojoToggle.BackgroundColor3 = Color3.fromRGB(80, 50, 100)
         -- Tắt luôn TP nếu đang chạy
         isTpActive = false
-        externalTpButton.Text = "TP 0.2 GIAI: [ OFF ]"
+        externalTpButton.Text = "TP GOJO: [ OFF ]"
         externalTpButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
     end
 end)
 
--- Chức năng TP Gojo liên tục qua mọi người (TP sát dưới chân & quay mặt lên trên)
+-- Chức năng TP Gojo liên tục qua mọi người (Dùng tốc độ từ ô nhập)
 externalTpButton.MouseButton1Click:Connect(function()
     isTpActive = not isTpActive
     if isTpActive then
-        externalTpButton.Text = "TP 0.2 GIAI: [ ON ]"
+        externalTpButton.Text = "TP GOJO: [ ON ]"
         externalTpButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
         
         task.spawn(function()
             while isTpActive do
+                local tpDelay = tonumber(TpSpeedInput.Text) or 0.1 -- Lấy tốc độ TP từ ô nhập (mặc định 0.1s)
                 for _, playerTarget in pairs(v0:GetPlayers()) do
                     if not isTpActive then break end
                     if playerTarget ~= v2 and playerTarget.Character and playerTarget.Character:FindFirstChild("HumanoidRootPart") then
@@ -226,15 +242,15 @@ externalTpButton.MouseButton1Click:Connect(function()
                             -- Quay mặt thẳng lên trên hướng về phía người bị TP
                             myHRP.CFrame = CFrame.lookAt(tpPos, targetPos, targetHRP.CFrame.LookVector)
                             
-                            task.wait(0.1) -- Dịch chuyển qua mỗi người 0.1 giây
+                            task.wait(tpDelay) -- Tốc độ dịch chuyển
                         end
                     end
                 end
-                task.wait(0.1)
+                task.wait(tpDelay)
             end
         end)
     else
-        externalTpButton.Text = "TP 0.2 GIAI: [ OFF ]"
+        externalTpButton.Text = "TP GOJO: [ OFF ]"
         externalTpButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
     end
 end)
