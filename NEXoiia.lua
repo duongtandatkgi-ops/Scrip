@@ -1,6 +1,10 @@
---[[ .____ ________ ___. _____ __ | | __ _______ \_____ \\_ |___/ ____\_ __ ______ ____ _____ _/ |_ ___________ | | | | \__ \ / | \| __ \ __\ | \/ ___// ___\\__ \\ __\/ _ \_ __ \ | |___| | // __ \_/ | \ \_\ \ | | | /\___ \\ \___ / __ \| | ( <_> ) | \/ |_______ \____/(____ /\_______ /___ /__| |____//____ >\___ >____ /__| \____/|__| \/ \/ ​​\/ ​​\/ ​​\/ ​​\/ ​​\/
-    BẢN NÂNG CẤP: THÊM Ô KHOẢNG CÁCH & HIỆN ICON RƠI
-]]-- 
+--[[ .____ ________ ___. _____ __
+| | __ _______ \_____ \\_ |___/ ____\_ __ ______ ____ _____ _/ |_ ___________
+| | | | \__ \ / | \| __ \ __\ | \/ ___// ___\\__ \\ __\/ _ \_ __ \
+| |___| | // __ \_/ | \ \_\ \ | | | /\___ \\ \___ / __ \| | ( <_> ) | \/
+|_______ \____/(____ /\_______ /___ /__| |____//____ >\___ >____ /__|
+        \____/|__| \/ \/ ​​​​\/ ​​\/ ​​\/ ​​\/ ​​\/
+BẢN NÂNG CẤP: THÊM Ô KHOẢNG CÁCH, HIỆN ICON RƠI & TP GOJO 0.2 GIAI ]]--
 
 local v0 = game:GetService("Players")
 local v1 = game:GetService("RunService")
@@ -12,12 +16,13 @@ v3.Name = "Follow_GUI_Hybrid_Pro"
 v3.ResetOnSpawn = false
 
 local v5 = Instance.new("Frame", v3)
-v5.Size = UDim2.new(0, 220, 0, 235) -- Mở rộng chiều cao để chứa thêm ô khoảng cách
+v5.Size = UDim2.new(0, 220, 0, 280) -- Mở rộng chiều cao thêm để chứa nút mới
 v5.Position = UDim2.new(0.8, 0, 0.4, 0)
 v5.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 v5.Active = true
 v5.Draggable = true
-v5.ClipsDescendants = true -- Giữ hiệu ứng icon không bị tràn ra ngoài khung
+v5.ClipsDescendants = true -- Đảm bảo icon rơi không bị lọt ra ngoài khung GUI
+
 Instance.new("UICorner", v5).CornerRadius = UDim.new(0, 8)
 
 -- =====================================
@@ -26,6 +31,8 @@ Instance.new("UICorner", v5).CornerRadius = UDim.new(0, 8)
 local EffectFolder = Instance.new("Folder", v5)
 EffectFolder.Name = "FallingIcons"
 local IconsList = {"✨", "🍃", "💫", "⭐", "❄️"}
+
+local v64 = false -- Biến thu gọn GUI
 
 task.spawn(function()
     while task.wait(0.4) do
@@ -43,7 +50,9 @@ task.spawn(function()
                 Rotation = math.random(90, 360)
             })
             tween:Play()
-            tween.Completed:Connect(function() icon:Destroy() end)
+            tween.Completed:Connect(function()
+                icon:Destroy()
+            end)
         end
     end
 end)
@@ -72,7 +81,7 @@ v22.ZIndex = 2
 
 local v32 = Instance.new("TextBox", v5)
 v32.Size = UDim2.new(0.9, 0, 0, 32)
-v32.Position = UDim2.new(0.05, 0, 0.18, 0)
+v32.Position = UDim2.new(0.05, 0, 0.15, 0)
 v32.PlaceholderText = "Nhập tên người chơi..."
 v32.Text = ""
 v32.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
@@ -84,8 +93,8 @@ Instance.new("UICorner", v32).CornerRadius = UDim.new(0, 5)
 
 local v43 = Instance.new("TextBox", v5)
 v43.Size = UDim2.new(0.9, 0, 0, 32)
-v43.Position = UDim2.new(0.05, 0, 0.38, 0)
-v43.PlaceholderText = "Tốc độ bay (Mặc định: 60)"
+v43.Position = UDim2.new(0.05, 0, 0.30, 0)
+v43.PlaceholderText = "Bay tốc độ (Mặc định: 60)"
 v43.Text = ""
 v43.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 v43.TextColor3 = Color3.new(1, 1, 1)
@@ -94,10 +103,9 @@ v43.TextSize = 12
 v43.ZIndex = 2
 Instance.new("UICorner", v43).CornerRadius = UDim.new(0, 5)
 
--- Ô NHẬP KHOẢNG CÁCH (MỚI THÊM)
 local DistanceInput = Instance.new("TextBox", v5)
 DistanceInput.Size = UDim2.new(0.9, 0, 0, 32)
-DistanceInput.Position = UDim2.new(0.05, 0, 0.58, 0)
+DistanceInput.Position = UDim2.new(0.05, 0, 0.45, 0)
 DistanceInput.PlaceholderText = "Khoảng cách bám (Mặc định: 5)"
 DistanceInput.Text = ""
 DistanceInput.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
@@ -109,8 +117,8 @@ Instance.new("UICorner", DistanceInput).CornerRadius = UDim.new(0, 5)
 
 local v53 = Instance.new("TextButton", v5)
 v53.Size = UDim2.new(0.9, 0, 0, 35)
-v53.Position = UDim2.new(0.05, 0, 0.78, 0)
-v53.Text = "BÁM LƯNG: [ TẮT ]"
+v53.Position = UDim2.new(0.05, 0, 0.60, 0)
+v53.Text = "BÁM LƯNG: [ BẮT ĐẦU ]"
 v53.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 v53.TextColor3 = Color3.new(1, 1, 1)
 v53.Font = Enum.Font.GothamBold
@@ -118,11 +126,41 @@ v53.TextSize = 13
 v53.ZIndex = 2
 Instance.new("UICorner", v53).CornerRadius = UDim.new(0, 5)
 
+-- =====================================
+-- NÚT MỚI: TP GOJO 0.2 GIAI
+-- =====================================
+local tpGojoToggle = Instance.new("TextButton", v5)
+tpGojoToggle.Size = UDim2.new(0.9, 0, 0, 35)
+tpGojoToggle.Position = UDim2.new(0.05, 0, 0.77, 0)
+tpGojoToggle.Text = "TP GOJO 0.2 GIAI: BẬT"
+tpGojoToggle.BackgroundColor3 = Color3.fromRGB(80, 50, 100)
+tpGojoToggle.TextColor3 = Color3.new(1, 1, 1)
+tpGojoToggle.Font = Enum.Font.GothamBold
+tpGojoToggle.TextSize = 12
+tpGojoToggle.ZIndex = 2
+Instance.new("UICorner", tpGojoToggle).CornerRadius = UDim.new(0, 5)
+
+-- Nút ngoài màn hình (chỉ hiện khi bật nút trong GUI lớn)
+local externalTpButton = Instance.new("TextButton", v3)
+externalTpButton.Size = UDim2.new(0, 160, 0, 40)
+externalTpButton.Position = UDim2.new(0.5, -80, 0, 20)
+externalTpButton.Text = "TP 0.2 GIAI: [ OFF ]"
+externalTpButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+externalTpButton.TextColor3 = Color3.new(1, 1, 1)
+externalTpButton.Font = Enum.Font.GothamBold
+externalTpButton.TextSize = 14
+externalTpButton.Visible = false
+externalTpButton.Draggable = true
+Instance.new("UICorner", externalTpButton).CornerRadius = UDim.new(0, 8)
+
 local v62 = false
 local v63 = nil
-local v64 = false
 local v65 = {}
 local v66 = false
+
+-- Biến logic cho nút mới
+local isTpGuiVisible = false
+local isTpActive = false
 
 v12.MouseButton1Click:Connect(function()
     v64 = not v64
@@ -132,16 +170,63 @@ v12.MouseButton1Click:Connect(function()
         v43.Visible = false
         DistanceInput.Visible = false
         v53.Visible = false
+        tpGojoToggle.Visible = false
         v12.Text = "+"
         v12.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
     else
-        v5.Size = UDim2.new(0, 220, 0, 235)
+        v5.Size = UDim2.new(0, 220, 0, 280)
         v32.Visible = true
         v43.Visible = true
         DistanceInput.Visible = true
         v53.Visible = true
+        tpGojoToggle.Visible = true
         v12.Text = "-"
         v12.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    end
+end)
+
+-- Bật/tắt giao diện nút TP bên ngoài
+tpGojoToggle.MouseButton1Click:Connect(function()
+    isTpGuiVisible = not isTpGuiVisible
+    externalTpButton.Visible = isTpGuiVisible
+    if isTpGuiVisible then
+        tpGojoToggle.Text = "TP GOJO 0.2 GIAI: ĐANG HIỆN"
+        tpGojoToggle.BackgroundColor3 = Color3.fromRGB(120, 60, 150)
+    else
+        tpGojoToggle.Text = "TP GOJO 0.2 GIAI: BẬT"
+        tpGojoToggle.BackgroundColor3 = Color3.fromRGB(80, 50, 100)
+        -- Tắt luôn TP nếu đang chạy
+        isTpActive = false
+        externalTpButton.Text = "TP 0.2 GIAI: [ OFF ]"
+        externalTpButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    end
+end)
+
+-- Chức năng TP Gojo liên tục qua mọi người
+externalTpButton.MouseButton1Click:Connect(function()
+    isTpActive = not isTpActive
+    if isTpActive then
+        externalTpButton.Text = "TP 0.2 GIAI: [ ON ]"
+        externalTpButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+        
+        task.spawn(function()
+            while isTpActive do
+                for _, playerTarget in pairs(v0:GetPlayers()) do
+                    if not isTpActive then break end
+                    if playerTarget ~= v2 and playerTarget.Character and playerTarget.Character:FindFirstChild("HumanoidRootPart") then
+                        local myChar = v2.Character
+                        if myChar and myChar:FindFirstChild("HumanoidRootPart") then
+                            myChar.HumanoidRootPart.CFrame = playerTarget.Character.HumanoidRootPart.CFrame
+                            task.wait(0.1) -- Dịch chuyển qua mỗi người 0.1 giây
+                        end
+                    end
+                end
+                task.wait(0.1)
+            end
+        end)
+    else
+        externalTpButton.Text = "TP 0.2 GIAI: [ OFF ]"
+        externalTpButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
     end
 end)
 
@@ -186,14 +271,17 @@ local function v68(v74)
     v76.MaxForce = math.huge
     v76.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
     v76.RelativeTo = Enum.ActuatorRelativeTo.World
+    
     local v84 = Instance.new("AlignOrientation", v74)
     v84.Attachment0 = v75
     v84.Mode = Enum.OrientationAlignmentMode.OneAttachment
     v84.MaxTorque = math.huge
     v84.MaxAngularVelocity = math.huge
+    
     table.insert(v65, v75)
     table.insert(v65, v76)
     table.insert(v65, v84)
+    
     local v90 = v74.Parent:FindFirstChild("Humanoid")
     if v90 then
         v90.PlatformStand = true
@@ -204,7 +292,6 @@ end
 v53.MouseButton1Click:Connect(function()
     if not v63 then return end
     v62 = not v62
-    
     if v62 then
         v53.Text = "BÁM LƯNG: [ BẬT ]"
         v53.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
@@ -213,7 +300,7 @@ v53.MouseButton1Click:Connect(function()
             v68(v114.HumanoidRootPart)
         end
     else
-        v53.Text = "BÁM LƯNG: [ TẮT ]"
+        v53.Text = "BÁM LƯNG: [ BẮT ĐẦU ]"
         v53.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
         v67()
     end
@@ -262,7 +349,7 @@ v1.Heartbeat:Connect(function()
             end
         elseif not v96 or not v96:FindFirstChild("HumanoidRootPart") then
             v62 = false
-            v53.Text = "BÁM LƯNG: [ TẮT ]"
+            v53.Text = "BÁM LƯNG: [ BẮT ĐẦU ]"
             v53.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
             v67()
         end
@@ -275,8 +362,6 @@ v1.RenderStepped:Connect(function()
         if v98 and v99 and v98:FindFirstChild("HumanoidRootPart") and v99:FindFirstChild("HumanoidRootPart") then
             local v109 = v98.HumanoidRootPart
             local v110 = v99.HumanoidRootPart
-            
-            -- Lấy khoảng cách người dùng nhập vào (Mặc định là 5 nếu bỏ trống hoặc nhập sai)
             local customDist = tonumber(DistanceInput.Text) or 5
             
             v109.CFrame = v110.CFrame * CFrame.new(0, 0, customDist)
