@@ -4,46 +4,69 @@
 | |___| | // __ \_/ | \ \_\ \ | | | /\___ \\ \___ / __ \| | ( <_> ) | \/
 |_______ \____/(____ /\_______ /___ /__| |____//____ >\___ >____ /__|
         \____/|__| \/ \/ ​​​​\/ ​​\/ ​​\/ ​​\/ ​​\/
-BẢN NÂNG CẤP: THÊM Ô KHOẢNG CÁCH, Ô TỐC ĐỘ TP, HIỆN ICON RƠI & TP GOJO ]]--
+BẢN FIX FULL: CHẠY MỌI EXECUTOR - KHÔNG LỖI CORE GUI ]]--
 
 local v0 = game:GetService("Players")
 local v1 = game:GetService("RunService")
 local v130 = game:GetService("TweenService")
-local v2 = v0.LocalPlayer
+local v2 = v0.LocalPlayer or v0.PlayerAdded:Wait()
 
-local v3 = Instance.new("ScreenGui", game.CoreGui)
+-- Tự động nhận diện CoreGui / PlayerGui thích hợp cho mọi Executor
+local targetParent
+if gethui then
+    targetParent = gethui()
+else
+    local success, result = pcall(function() return game:GetService("CoreGui") end)
+    if success and result then
+        targetParent = result
+    else
+        targetParent = v2:WaitForChild("PlayerGui")
+    end
+end
+
+-- Xóa GUI cũ nếu đã tồn tại
+if targetParent:FindFirstChild("Follow_GUI_Hybrid_Pro") then
+    targetParent.Follow_GUI_Hybrid_Pro:Destroy()
+end
+
+local v3 = Instance.new("ScreenGui")
 v3.Name = "Follow_GUI_Hybrid_Pro"
 v3.ResetOnSpawn = false
+v3.Parent = targetParent
 
-local v5 = Instance.new("Frame", v3)
-v5.Size = UDim2.new(0, 220, 0, 320) -- Mở rộng chiều cao lên 320 để vừa ô tốc độ mới
-v5.Position = UDim2.new(0.8, 0, 0.4, 0)
+local v5 = Instance.new("Frame")
+v5.Name = "MainFrame"
+v5.Size = UDim2.new(0, 220, 0, 320)
+v5.Position = UDim2.new(0.5, -110, 0.25, 0) -- Đưa ra vị trí giữa màn hình
 v5.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 v5.Active = true
 v5.Draggable = true
-v5.ClipsDescendants = true -- Đảm bảo icon rơi không bị lọt ra ngoài khung GUI
+v5.ClipsDescendants = true
+v5.Parent = v3
 
 Instance.new("UICorner", v5).CornerRadius = UDim.new(0, 8)
 
 -- =====================================
 -- HIỆU ỨNG ICON RƠI TRONG GIAO DIỆN LỚN
 -- =====================================
-local EffectFolder = Instance.new("Folder", v5)
+local EffectFolder = Instance.new("Folder")
 EffectFolder.Name = "FallingIcons"
+EffectFolder.Parent = v5
 local IconsList = {"✨", "🍃", "💫", "⭐", "❄️"}
 
 local v64 = false -- Biến thu gọn GUI
 
 task.spawn(function()
     while task.wait(0.4) do
-        if v5.Visible and not v64 then
-            local icon = Instance.new("TextLabel", EffectFolder)
+        if v5 and v5.Parent and v5.Visible and not v64 then
+            local icon = Instance.new("TextLabel")
             icon.Text = IconsList[math.random(1, #IconsList)]
             icon.BackgroundTransparency = 1
             icon.Size = UDim2.new(0, 20, 0, 20)
             icon.Position = UDim2.new(math.random(1, 90)/100, 0, 0, -20)
             icon.TextSize = math.random(12, 18)
             icon.ZIndex = 1
+            icon.Parent = EffectFolder
             
             local tween = v130:Create(icon, TweenInfo.new(math.random(3, 5), Enum.EasingStyle.Linear), {
                 Position = UDim2.new(icon.Position.X.Scale, 0, 1, 20),
@@ -57,7 +80,7 @@ task.spawn(function()
     end
 end)
 
-local v12 = Instance.new("TextButton", v5)
+local v12 = Instance.new("TextButton")
 v12.Size = UDim2.new(0, 30, 0, 30)
 v12.Position = UDim2.new(1, -35, 0, 5)
 v12.Text = "-"
@@ -65,10 +88,11 @@ v12.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 v12.TextColor3 = Color3.new(1, 1, 1)
 v12.Font = Enum.Font.GothamBold
 v12.TextSize = 18
-v12.ZIndex = 2
+v12.ZIndex = 5
+v12.Parent = v5
 Instance.new("UICorner", v12).CornerRadius = UDim.new(0, 5)
 
-local v22 = Instance.new("TextLabel", v5)
+local v22 = Instance.new("TextLabel")
 v22.Size = UDim2.new(0.8, 0, 0, 25)
 v22.Position = UDim2.new(0.05, 0, 0.02, 0)
 v22.Text = "Mục tiêu: Chưa có"
@@ -77,9 +101,10 @@ v22.BackgroundTransparency = 1
 v22.Font = Enum.Font.GothamBold
 v22.TextSize = 12
 v22.TextXAlignment = Enum.TextXAlignment.Left
-v22.ZIndex = 2
+v22.ZIndex = 5
+v22.Parent = v5
 
-local v32 = Instance.new("TextBox", v5)
+local v32 = Instance.new("TextBox")
 v32.Size = UDim2.new(0.9, 0, 0, 32)
 v32.Position = UDim2.new(0.05, 0, 0.10, 0)
 v32.PlaceholderText = "Nhập tên người chơi..."
@@ -88,10 +113,11 @@ v32.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 v32.TextColor3 = Color3.new(1, 1, 1)
 v32.Font = Enum.Font.Gotham
 v32.TextSize = 12
-v32.ZIndex = 2
+v32.ZIndex = 5
+v32.Parent = v5
 Instance.new("UICorner", v32).CornerRadius = UDim.new(0, 5)
 
-local v43 = Instance.new("TextBox", v5)
+local v43 = Instance.new("TextBox")
 v43.Size = UDim2.new(0.9, 0, 0, 32)
 v43.Position = UDim2.new(0.05, 0, 0.22, 0)
 v43.PlaceholderText = "Bay tốc độ (Mặc định: 60)"
@@ -100,10 +126,11 @@ v43.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 v43.TextColor3 = Color3.new(1, 1, 1)
 v43.Font = Enum.Font.Gotham
 v43.TextSize = 12
-v43.ZIndex = 2
+v43.ZIndex = 5
+v43.Parent = v5
 Instance.new("UICorner", v43).CornerRadius = UDim.new(0, 5)
 
-local DistanceInput = Instance.new("TextBox", v5)
+local DistanceInput = Instance.new("TextBox")
 DistanceInput.Size = UDim2.new(0.9, 0, 0, 32)
 DistanceInput.Position = UDim2.new(0.05, 0, 0.34, 0)
 DistanceInput.PlaceholderText = "Khoảng cách bám (Mặc định: 5)"
@@ -112,11 +139,12 @@ DistanceInput.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 DistanceInput.TextColor3 = Color3.new(1, 1, 1)
 DistanceInput.Font = Enum.Font.Gotham
 DistanceInput.TextSize = 12
-DistanceInput.ZIndex = 2
+DistanceInput.ZIndex = 5
+DistanceInput.Parent = v5
 Instance.new("UICorner", DistanceInput).CornerRadius = UDim.new(0, 5)
 
--- Ô MỚI: TỐC ĐỘ DỊCH CHUYỂN TP GOJO
-local TpSpeedInput = Instance.new("TextBox", v5)
+-- Ô TỐC ĐỘ DỊCH CHUYỂN TP GOJO
+local TpSpeedInput = Instance.new("TextBox")
 TpSpeedInput.Size = UDim2.new(0.9, 0, 0, 32)
 TpSpeedInput.Position = UDim2.new(0.05, 0, 0.46, 0)
 TpSpeedInput.PlaceholderText = "Tốc độ TP Gojo (Mặc định: 0.1)"
@@ -125,10 +153,11 @@ TpSpeedInput.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 TpSpeedInput.TextColor3 = Color3.new(1, 1, 1)
 TpSpeedInput.Font = Enum.Font.Gotham
 TpSpeedInput.TextSize = 12
-TpSpeedInput.ZIndex = 2
+TpSpeedInput.ZIndex = 5
+TpSpeedInput.Parent = v5
 Instance.new("UICorner", TpSpeedInput).CornerRadius = UDim.new(0, 5)
 
-local v53 = Instance.new("TextButton", v5)
+local v53 = Instance.new("TextButton")
 v53.Size = UDim2.new(0.9, 0, 0, 35)
 v53.Position = UDim2.new(0.05, 0, 0.60, 0)
 v53.Text = "BÁM LƯNG: [ BẮT ĐẦU ]"
@@ -136,11 +165,12 @@ v53.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
 v53.TextColor3 = Color3.new(1, 1, 1)
 v53.Font = Enum.Font.GothamBold
 v53.TextSize = 13
-v53.ZIndex = 2
+v53.ZIndex = 5
+v53.Parent = v5
 Instance.new("UICorner", v53).CornerRadius = UDim.new(0, 5)
 
 -- NÚT TP GOJO 0.2 GIAI
-local tpGojoToggle = Instance.new("TextButton", v5)
+local tpGojoToggle = Instance.new("TextButton")
 tpGojoToggle.Size = UDim2.new(0.9, 0, 0, 35)
 tpGojoToggle.Position = UDim2.new(0.05, 0, 0.76, 0)
 tpGojoToggle.Text = "TP GOJO 0.2 GIAI: BẬT"
@@ -148,11 +178,12 @@ tpGojoToggle.BackgroundColor3 = Color3.fromRGB(80, 50, 100)
 tpGojoToggle.TextColor3 = Color3.new(1, 1, 1)
 tpGojoToggle.Font = Enum.Font.GothamBold
 tpGojoToggle.TextSize = 12
-tpGojoToggle.ZIndex = 2
+tpGojoToggle.ZIndex = 5
+tpGojoToggle.Parent = v5
 Instance.new("UICorner", tpGojoToggle).CornerRadius = UDim.new(0, 5)
 
--- Nút ngoài màn hình (chỉ hiện khi bật nút trong GUI lớn)
-local externalTpButton = Instance.new("TextButton", v3)
+-- Nút ngoài màn hình
+local externalTpButton = Instance.new("TextButton")
 externalTpButton.Size = UDim2.new(0, 160, 0, 40)
 externalTpButton.Position = UDim2.new(0.5, -80, 0, 20)
 externalTpButton.Text = "TP 0.2 GIAI: [ OFF ]"
@@ -161,7 +192,10 @@ externalTpButton.TextColor3 = Color3.new(1, 1, 1)
 externalTpButton.Font = Enum.Font.GothamBold
 externalTpButton.TextSize = 14
 externalTpButton.Visible = false
+externalTpButton.Active = true
 externalTpButton.Draggable = true
+externalTpButton.ZIndex = 10
+externalTpButton.Parent = v3
 Instance.new("UICorner", externalTpButton).CornerRadius = UDim.new(0, 8)
 
 local v62 = false
@@ -169,7 +203,6 @@ local v63 = nil
 local v65 = {}
 local v66 = false
 
--- Biến logic cho nút mới
 local isTpGuiVisible = false
 local isTpActive = false
 
@@ -198,7 +231,6 @@ v12.MouseButton1Click:Connect(function()
     end
 end)
 
--- Bật/tắt giao diện nút TP bên ngoài
 tpGojoToggle.MouseButton1Click:Connect(function()
     isTpGuiVisible = not isTpGuiVisible
     externalTpButton.Visible = isTpGuiVisible
@@ -208,14 +240,12 @@ tpGojoToggle.MouseButton1Click:Connect(function()
     else
         tpGojoToggle.Text = "TP GOJO 0.2 GIAI: BẬT"
         tpGojoToggle.BackgroundColor3 = Color3.fromRGB(80, 50, 100)
-        -- Tắt luôn TP nếu đang chạy
         isTpActive = false
         externalTpButton.Text = "TP 0.2 GIAI: [ OFF ]"
         externalTpButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
     end
 end)
 
--- Chức năng TP Gojo liên tục qua mọi người (sử dụng tốc độ cài đặt từ ô nhập)
 externalTpButton.MouseButton1Click:Connect(function()
     isTpActive = not isTpActive
     if isTpActive then
@@ -232,14 +262,11 @@ externalTpButton.MouseButton1Click:Connect(function()
                             local targetHRP = playerTarget.Character.HumanoidRootPart
                             local myHRP = myChar.HumanoidRootPart
                             
-                            -- Vị trí dưới chân người chơi (cách 0 stu ngang, nằm sát dưới chân)
                             local targetPos = targetHRP.Position
                             local tpPos = targetHRP.CFrame * CFrame.new(0, -2.5, 0)
                             
-                            -- Quay mặt thẳng lên trên hướng về phía người bị TP
                             myHRP.CFrame = CFrame.lookAt(tpPos, targetPos, targetHRP.CFrame.LookVector)
                             
-                            -- Đọc tốc độ từ ô nhập (mặc định 0.1 giây)
                             local tpDelay = tonumber(TpSpeedInput.Text) or 0.1
                             task.wait(tpDelay)
                         end
@@ -289,18 +316,21 @@ end
 
 local function v68(v74)
     v67()
-    local v75 = Instance.new("Attachment", v74)
-    local v76 = Instance.new("LinearVelocity", v74)
+    local v75 = Instance.new("Attachment")
+    v75.Parent = v74
+    local v76 = Instance.new("LinearVelocity")
     v76.Attachment0 = v75
     v76.MaxForce = math.huge
     v76.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
     v76.RelativeTo = Enum.ActuatorRelativeTo.World
+    v76.Parent = v74
     
-    local v84 = Instance.new("AlignOrientation", v74)
+    local v84 = Instance.new("AlignOrientation")
     v84.Attachment0 = v75
     v84.Mode = Enum.OrientationAlignmentMode.OneAttachment
     v84.MaxTorque = math.huge
     v84.MaxAngularVelocity = math.huge
+    v84.Parent = v74
     
     table.insert(v65, v75)
     table.insert(v65, v76)
@@ -394,3 +424,4 @@ v1.RenderStepped:Connect(function()
         end
     end
 end)
+
