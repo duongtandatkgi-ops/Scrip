@@ -1,6 +1,5 @@
 --[[
-    Eggs Tool - Pro Version (ESP Text, Fix Luck, TP, Auto Farm Priority)
-    Đã chỉnh sửa: Dịch chuyển trứng về bên phải giữa nhà.
+    Eggs Tool - Pro Version (Fixed ESP Text & Egg Luck Display)
 ]] 
 
 local Players = game:GetService("Players")
@@ -36,6 +35,7 @@ local priorityAutoNames = {}
 local currentSearchQuery = ""
 local currentAllEggsQuery = ""
 local isMinimized = false
+
 local homeCFrame = nil
 local isFalling = false
 
@@ -53,19 +53,14 @@ end
 
 local function getTargetPosition(target)
     if not target or not target.Parent then return nil end
-    if target:IsA("Model") then return target:GetPivot().Position end
-    if target:IsA("BasePart") then return target.Position end
-    return nil
-end
-
--- Hàm lấy phần gốc để dịch chuyển mô hình/part của trứng
-local function moveTargetTo(target, newCFrame)
-    if not target or not target.Parent then return end
-    if target:IsA("Model") then
-        target:PivotTo(newCFrame)
-    elseif target:IsA("BasePart") then
-        target.CFrame = newCFrame
+    if target:IsA("Model") then 
+        local success, pivot = pcall(function() return target:GetPivot() end)
+        if success and pivot then return pivot.Position end
+        return target:GetModelCFrame().Position
+    elseif target:IsA("BasePart") then 
+        return target.Position 
     end
+    return nil
 end
 
 local function tween(object, properties, duration)
@@ -84,6 +79,7 @@ local function getEggImage(eggName)
     return img ~= "" and img or "rbxassetid://10651105078"
 end
 
+-- SỬA LỖI KHÔNG HIỆN MAY MẮN: Đọc trực tiếp từ UI Index trong PlayerGui của game
 local function getEggLuck(eggName)
     local luck = "??"
     pcall(function()
@@ -131,13 +127,13 @@ RunService.Stepped:Connect(function()
 end)
 
 --==================================================
--- CORE ESP
+-- CORE ESP (SỬA LỖI HIỆN CHỮ TÊN TRỨNG TRÊN ĐẦU)
 --==================================================
 local function updateEggESP(egg)
     if not egg or (not egg:IsA("Model") and not egg:IsA("BasePart")) then return end
 
     if not eggData[egg] then
-        eggData[egg] = { Highlight = nil, Billboard = nil, CustomColor = Config.CustomESPColor, CustomActive = false, CustomAuto = false }
+        eggData[egg] = { Highlight = nil, Billboard = nil, CustomColor = Config.CustomESPColor, CustomActive = false }
     end
 
     local data = eggData[egg]
@@ -145,6 +141,7 @@ local function updateEggESP(egg)
     local color = data.CustomActive and data.CustomColor or Config.GlobalESPColor
 
     if shouldShow then
+        -- Xử lý Highlight
         if not data.Highlight or not data.Highlight.Parent then
             local highlight = Instance.new("Highlight")
             highlight.Name = "EggESP_Highlight"
@@ -158,6 +155,7 @@ local function updateEggESP(egg)
         data.Highlight.OutlineColor = color
         data.Highlight.Enabled = true
 
+        -- Xử lý BillboardGui (Hiển thị chữ tên trứng)
         if not data.Billboard or not data.Billboard.Parent then
             local bgui = Instance.new("BillboardGui")
             bgui.Name = "EggESP_Text"
@@ -223,7 +221,7 @@ local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, -50, 1, 0)
 TitleLabel.Position = UDim2.new(0, 15, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "Egg Tool - TP Trứng Về Bên Phải Nhà"
+TitleLabel.Text = "Egg Tool - Fixed Version"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 14
 TitleLabel.Font = Enum.Font.GothamBold
@@ -367,7 +365,7 @@ local ToggleAutoFarmBtn = Instance.new("TextButton")
 ToggleAutoFarmBtn.Size = UDim2.new(1, -20, 0, 35)
 ToggleAutoFarmBtn.Position = UDim2.new(0, 10, 0, 100)
 ToggleAutoFarmBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-ToggleAutoFarmBtn.Text = "▶ Bắt Đầu Kéo Trứng Về Nhà: OFF"
+ToggleAutoFarmBtn.Text = "▶ Bắt Đầu Auto Farm: OFF"
 ToggleAutoFarmBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
 ToggleAutoFarmBtn.Font = Enum.Font.GothamBold
 ToggleAutoFarmBtn.Parent = SettingsContainer
@@ -375,7 +373,7 @@ Instance.new("UICorner", ToggleAutoFarmBtn).CornerRadius = UDim.new(0, 6)
 
 ToggleAutoFarmBtn.MouseButton1Click:Connect(function()
     autoFarmActive = not autoFarmActive
-    ToggleAutoFarmBtn.Text = autoFarmActive and "▶ Đang Kéo Trứng Về Nhà: ON" or "▶ Bắt Đầu Kéo Trứng Về Nhà: OFF"
+    ToggleAutoFarmBtn.Text = autoFarmActive and "▶ Đang Auto Farm: ON" or "▶ Bắt Đầu Auto Farm: OFF"
     ToggleAutoFarmBtn.TextColor3 = autoFarmActive and Color3.fromRGB(0, 255, 127) or Color3.fromRGB(220, 220, 220)
     if autoFarmActive and not homeCFrame then
         local root = getRootPart()
@@ -460,7 +458,7 @@ local function populateSpawnedList()
         luckL.TextXAlignment = Enum.TextXAlignment.Left
         luckL.Parent = Item
 
-        if not eggData[egg] then eggData[egg] = { CustomActive = false, CustomAuto = false } end
+        if not eggData[egg] then eggData[egg] = { CustomActive = false } end
         local data = eggData[egg]
 
         local TPBtn = Instance.new("TextButton")
@@ -587,34 +585,42 @@ SearchBoxAll:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 --==================================================
--- LOGIC AUTO FARM: DỊCH CHUYỂN TRỨNG VỀ BÊN PHẢI NHÀ
+-- LOGIC AUTO FARM LOOP
 --==================================================
 task.spawn(function()
-    while task.wait(0.5) do
+    while task.wait(0.2) do
         if autoFarmActive and homeCFrame then
             local targetEgg = nil
             for _, egg in ipairs(RenderedEggsFolder:GetChildren()) do
                 if (egg:IsA("Model") or egg:IsA("BasePart")) then
                     if priorityAutoNames[egg.Name] then
                         targetEgg = egg
-                        break
+                        break 
                     end
                 end
             end
             
             if targetEgg and targetEgg.Parent then
-                -- Tính toán vị trí bên phải của nhà (CFrame nhân với CFrame.new(khoảng cách bên phải, độ cao, chiều sâu))
-                -- Ở đây tôi chọn lệch sang phải 5 studs (thay đổi số 5 nếu muốn xa hoặc gần hơn)
-                local rightSideCFrame = homeCFrame * CFrame.new(5, 0, 0)
+                local root = getRootPart()
+                local targetPos = getTargetPosition(targetEgg)
                 
-                -- Dịch chuyển quả trứng thẳng về vị trí bên phải nhà
-                moveTargetTo(targetEgg, rightSideCFrame)
-                
-                -- Kích hoạt ProximityPrompt nếu có
-                local prompt = targetEgg:FindFirstChildWhichIsA("ProximityPrompt", true)
-                if prompt then
-                    task.wait(0.1)
-                    fireproximityprompt(prompt, 1)
+                if root and targetPos then
+                    root.CFrame = CFrame.new(targetPos + Vector3.new(0, 4, 0))
+                    task.wait(0.5) 
+                    
+                    local prompt = targetEgg:FindFirstChildWhichIsA("ProximityPrompt", true)
+                    if prompt then
+                        fireproximityprompt(prompt, 1)
+                    end
+                    task.wait(0.5) 
+                    
+                    isFalling = true
+                    root.Velocity = Vector3.new(0, -60, 0) 
+                    task.wait(1.5) 
+                    isFalling = false
+                    
+                    root.CFrame = homeCFrame
+                    task.wait(1) 
                 end
             end
         end
