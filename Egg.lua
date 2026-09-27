@@ -1,6 +1,5 @@
 --[[
-    Eggs Tool - Pro Version (ESP, TP, Auto Farm Priority)
-    Hỗ trợ 3 Tab: Trứng trên map, Tất cả trứng (Ưu tiên auto), Cài đặt chung.
+    Eggs Tool - Pro Version (ESP Text, Fix Luck, TP, Auto Farm Priority + Dịch về phải giữa nhà)
 ]] 
 
 local Players = game:GetService("Players")
@@ -18,7 +17,7 @@ local Config = {
     ESPOutlineTransparency = 0,
     GlobalESPColor = Color3.fromRGB(170, 85, 255),
     CustomESPColor = Color3.fromRGB(0, 255, 127), 
-    MenuWidth = 480,  -- Mở rộng menu ra một chút để đủ chỗ cho 3 Tab
+    MenuWidth = 480,
     MenuHeight = 310, 
     AnimationTime = 0.18,
 }
@@ -31,12 +30,11 @@ local RenderedEggsFolder = Workspace:WaitForChild("RenderedEggs", 10)
 --==================================================
 local mainESPActive = false
 local autoFarmActive = false
-local eggData = {}                -- Dữ liệu trứng đang có trên map
-local priorityAutoNames = {}      -- Danh sách tên trứng ưu tiên từ tab "Tất Cả Trứng"
+local eggData = {}
+local priorityAutoNames = {}
 local currentSearchQuery = ""
 local currentAllEggsQuery = ""
 local isMinimized = false
-
 local homeCFrame = nil
 local isFalling = false
 
@@ -75,21 +73,25 @@ local function getEggImage(eggName)
     return img ~= "" and img or "rbxassetid://10651105078"
 end
 
-local function getEggLuck(egg)
+local function getEggLuck(eggName)
     local luck = "??"
     pcall(function()
-        if typeof(egg) == "Instance" then
-            if egg:GetAttribute("Luck") then 
-                luck = tostring(egg:GetAttribute("Luck"))
-            elseif egg:FindFirstChild("Luck") and egg.Luck:IsA("ValueBase") then
-                luck = tostring(egg.Luck.Value)
+        local main = LocalPlayer.PlayerGui:FindFirstChild("Main")
+        local eggUI = main.Index.Holders.EggsHolder:FindFirstChild(eggName)
+        if eggUI then
+            for _, child in ipairs(eggUI:GetDescendants()) do
+                if child:IsA("TextLabel") and (string.match(child.Text, "%d") or string.match(child.Text, "[KMBT]")) then
+                    if not string.match(child.Text:lower(), "trứng") and child.Text ~= eggName then
+                        luck = child.Text
+                        break
+                    end
+                end
             end
         end
     end)
     return luck
 end
 
--- Lấy danh sách toàn bộ trứng có trong game từ thư mục Index
 local function getAllEggNamesInGame()
     local names = {}
     pcall(function()
@@ -104,7 +106,6 @@ local function getAllEggNamesInGame()
     return names
 end
 
--- Vòng lặp Noclip để cho rơi tự do xuyên đất
 RunService.Stepped:Connect(function()
     if isFalling then
         local char = getCharacter()
@@ -125,7 +126,7 @@ local function updateEggESP(egg)
     if not egg or (not egg:IsA("Model") and not egg:IsA("BasePart")) then return end
 
     if not eggData[egg] then
-        eggData[egg] = { Highlight = nil, CustomColor = Config.CustomESPColor, CustomActive = false, CustomAuto = false }
+        eggData[egg] = { Highlight = nil, Billboard = nil, CustomColor = Config.CustomESPColor, CustomActive = false, CustomAuto = false }
     end
 
     local data = eggData[egg]
@@ -145,8 +146,32 @@ local function updateEggESP(egg)
         data.Highlight.FillColor = color
         data.Highlight.OutlineColor = color
         data.Highlight.Enabled = true
+
+        if not data.Billboard or not data.Billboard.Parent then
+            local bgui = Instance.new("BillboardGui")
+            bgui.Name = "EggESP_Text"
+            bgui.Adornee = egg
+            bgui.Size = UDim2.new(0, 150, 0, 30)
+            bgui.StudsOffset = Vector3.new(0, 2.5, 0)
+            bgui.AlwaysOnTop = true
+
+            local textLabel = Instance.new("TextLabel")
+            textLabel.Size = UDim2.new(1, 0, 1, 0)
+            textLabel.BackgroundTransparency = 1
+            textLabel.Text = egg.Name
+            textLabel.Font = Enum.Font.GothamBold
+            textLabel.TextSize = 12
+            textLabel.TextStrokeTransparency = 0
+            textLabel.Parent = bgui
+
+            bgui.Parent = egg
+            data.Billboard = bgui
+        end
+        data.Billboard.TextLabel.TextColor3 = color
+        data.Billboard.Enabled = true
     else
         if data.Highlight then data.Highlight.Enabled = false end
+        if data.Billboard then data.Billboard.Enabled = false end
     end
 end
 
@@ -261,7 +286,6 @@ SettingsContainer.BackgroundTransparency = 1
 SettingsContainer.Visible = false
 SettingsContainer.Parent = MainFrame
 
--- CHUYỂN TAB LOGIC
 local function hideAllContainers()
     SpawnedContainer.Visible = false
     AllEggsContainer.Visible = false
@@ -418,7 +442,7 @@ local function populateSpawnedList()
         luckL.Size = UDim2.new(1, -190, 0, 15)
         luckL.Position = UDim2.new(0, 45, 0, 23)
         luckL.BackgroundTransparency = 1
-        luckL.Text = "🍀 May mắn: " .. getEggLuck(egg)
+        luckL.Text = "🍀 May mắn: " .. getEggLuck(egg.Name)
         luckL.TextColor3 = Color3.fromRGB(150, 255, 150)
         luckL.Font = Enum.Font.Gotham
         luckL.TextSize = 11
@@ -465,7 +489,7 @@ SearchBoxSpawned:GetPropertyChangedSignal("Text"):Connect(function()
     populateSpawnedList()
 end)
 
--- ================== TẤT CẢ TRỨNG TAB (ƯU TIÊN) ==================
+-- ================== TẤT CẢ TRỨNG TAB ==================
 local SearchBoxAll = Instance.new("TextBox")
 SearchBoxAll.Size = UDim2.new(1, -20, 0, 25)
 SearchBoxAll.Position = UDim2.new(0, 10, 0, 5)
@@ -557,20 +581,16 @@ end)
 task.spawn(function()
     while task.wait(0.2) do
         if autoFarmActive and homeCFrame then
-            -- Quét các trứng đang tồn tại trên map xem có quả nào thuộc danh sách ƯU TIÊN không
             local targetEgg = nil
-            
             for _, egg in ipairs(RenderedEggsFolder:GetChildren()) do
                 if (egg:IsA("Model") or egg:IsA("BasePart")) then
-                    -- Nếu trứng có tên nằm trong danh sách priorityAutoNames
                     if priorityAutoNames[egg.Name] then
                         targetEgg = egg
-                        break -- Tìm thấy 1 quả ưu tiên là farm ngay
+                        break
                     end
                 end
             end
             
-            -- Thực hiện chu trình auto farm
             if targetEgg and targetEgg.Parent then
                 local root = getRootPart()
                 local targetPos = getTargetPosition(targetEgg)
@@ -580,21 +600,21 @@ task.spawn(function()
                     root.CFrame = CFrame.new(targetPos + Vector3.new(0, 4, 0))
                     task.wait(0.5) 
                     
-                    -- 2. Đè E nút nhặt (Tự động fire ProximityPrompt)
+                    -- 2. Tự động nhặt trứng
                     local prompt = targetEgg:FindFirstChildWhichIsA("ProximityPrompt", true)
                     if prompt then
                         fireproximityprompt(prompt, 1)
                     end
                     task.wait(0.5) 
                     
-                    -- 3. Rơi tự do xuống lòng đất (Noclip bật)
+                    -- 3. Rơi xuyên đất
                     isFalling = true
                     root.Velocity = Vector3.new(0, -60, 0) 
                     task.wait(1.5) 
                     isFalling = false
                     
-                    -- 4. Dịch chuyển về nhà
-                    root.CFrame = homeCFrame
+                    -- 4. Dịch chuyển về nhà (đã lệch sang phải giữa nhà)
+                    root.CFrame = homeCFrame + Vector3.new(3, 0, 0) -- Cộng thêm 3 đơn vị sang phải (Trục X)
                     task.wait(1) 
                 end
             end
