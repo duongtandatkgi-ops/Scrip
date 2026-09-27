@@ -1,5 +1,6 @@
 --[[
-    Eggs Tool - Pro Version (ESP Text, Fix Luck, TP, Auto Farm Priority + Dịch về phải giữa nhà)
+    Eggs Tool - Pro Version (ESP Text, Fix Luck, TP, Auto Farm Priority)
+    Đã chỉnh sửa: Dịch chuyển trứng về bên phải giữa nhà.
 ]] 
 
 local Players = game:GetService("Players")
@@ -55,6 +56,16 @@ local function getTargetPosition(target)
     if target:IsA("Model") then return target:GetPivot().Position end
     if target:IsA("BasePart") then return target.Position end
     return nil
+end
+
+-- Hàm lấy phần gốc để dịch chuyển mô hình/part của trứng
+local function moveTargetTo(target, newCFrame)
+    if not target or not target.Parent then return end
+    if target:IsA("Model") then
+        target:PivotTo(newCFrame)
+    elseif target:IsA("BasePart") then
+        target.CFrame = newCFrame
+    end
 end
 
 local function tween(object, properties, duration)
@@ -212,7 +223,7 @@ local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, -50, 1, 0)
 TitleLabel.Position = UDim2.new(0, 15, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "Egg Tool - Pro AutoFarm (Update)"
+TitleLabel.Text = "Egg Tool - TP Trứng Về Bên Phải Nhà"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 14
 TitleLabel.Font = Enum.Font.GothamBold
@@ -356,7 +367,7 @@ local ToggleAutoFarmBtn = Instance.new("TextButton")
 ToggleAutoFarmBtn.Size = UDim2.new(1, -20, 0, 35)
 ToggleAutoFarmBtn.Position = UDim2.new(0, 10, 0, 100)
 ToggleAutoFarmBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-ToggleAutoFarmBtn.Text = "▶ Bắt Đầu Auto Farm: OFF"
+ToggleAutoFarmBtn.Text = "▶ Bắt Đầu Kéo Trứng Về Nhà: OFF"
 ToggleAutoFarmBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
 ToggleAutoFarmBtn.Font = Enum.Font.GothamBold
 ToggleAutoFarmBtn.Parent = SettingsContainer
@@ -364,7 +375,7 @@ Instance.new("UICorner", ToggleAutoFarmBtn).CornerRadius = UDim.new(0, 6)
 
 ToggleAutoFarmBtn.MouseButton1Click:Connect(function()
     autoFarmActive = not autoFarmActive
-    ToggleAutoFarmBtn.Text = autoFarmActive and "▶ Đang Auto Farm: ON" or "▶ Bắt Đầu Auto Farm: OFF"
+    ToggleAutoFarmBtn.Text = autoFarmActive and "▶ Đang Kéo Trứng Về Nhà: ON" or "▶ Bắt Đầu Kéo Trứng Về Nhà: OFF"
     ToggleAutoFarmBtn.TextColor3 = autoFarmActive and Color3.fromRGB(0, 255, 127) or Color3.fromRGB(220, 220, 220)
     if autoFarmActive and not homeCFrame then
         local root = getRootPart()
@@ -576,10 +587,10 @@ SearchBoxAll:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 --==================================================
--- LOGIC AUTO FARM LOOP
+-- LOGIC AUTO FARM: DỊCH CHUYỂN TRỨNG VỀ BÊN PHẢI NHÀ
 --==================================================
 task.spawn(function()
-    while task.wait(0.2) do
+    while task.wait(0.5) do
         if autoFarmActive and homeCFrame then
             local targetEgg = nil
             for _, egg in ipairs(RenderedEggsFolder:GetChildren()) do
@@ -592,30 +603,18 @@ task.spawn(function()
             end
             
             if targetEgg and targetEgg.Parent then
-                local root = getRootPart()
-                local targetPos = getTargetPosition(targetEgg)
+                -- Tính toán vị trí bên phải của nhà (CFrame nhân với CFrame.new(khoảng cách bên phải, độ cao, chiều sâu))
+                -- Ở đây tôi chọn lệch sang phải 5 studs (thay đổi số 5 nếu muốn xa hoặc gần hơn)
+                local rightSideCFrame = homeCFrame * CFrame.new(5, 0, 0)
                 
-                if root and targetPos then
-                    -- 1. Bay tới chỗ trứng
-                    root.CFrame = CFrame.new(targetPos + Vector3.new(0, 4, 0))
-                    task.wait(0.5) 
-                    
-                    -- 2. Tự động nhặt trứng
-                    local prompt = targetEgg:FindFirstChildWhichIsA("ProximityPrompt", true)
-                    if prompt then
-                        fireproximityprompt(prompt, 1)
-                    end
-                    task.wait(0.5) 
-                    
-                    -- 3. Rơi xuyên đất
-                    isFalling = true
-                    root.Velocity = Vector3.new(0, -60, 0) 
-                    task.wait(1.5) 
-                    isFalling = false
-                    
-                    -- 4. Dịch chuyển về nhà (đã lệch sang phải giữa nhà)
-                    root.CFrame = homeCFrame + Vector3.new(3, 0, 0) -- Cộng thêm 3 đơn vị sang phải (Trục X)
-                    task.wait(1) 
+                -- Dịch chuyển quả trứng thẳng về vị trí bên phải nhà
+                moveTargetTo(targetEgg, rightSideCFrame)
+                
+                -- Kích hoạt ProximityPrompt nếu có
+                local prompt = targetEgg:FindFirstChildWhichIsA("ProximityPrompt", true)
+                if prompt then
+                    task.wait(0.1)
+                    fireproximityprompt(prompt, 1)
                 end
             end
         end
