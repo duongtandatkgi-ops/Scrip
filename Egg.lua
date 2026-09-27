@@ -1,5 +1,5 @@
 --[[
-    Eggs Tool - Pro Version (Auto Farm Fix & Removed SetHome Button)
+    Eggs Tool - Pro Version (Volcanic Egg Fix: Teleport + Fly + Noclip)
 ]] 
 
 local Players = game:GetService("Players")
@@ -18,7 +18,7 @@ local Config = {
     GlobalESPColor = Color3.fromRGB(170, 85, 255),
     CustomESPColor = Color3.fromRGB(0, 255, 127), 
     MenuWidth = 480,
-    MenuHeight = 270, -- Thu nhỏ chiều cao menu lại một chút do đã bỏ bớt 1 nút
+    MenuHeight = 270,
     AnimationTime = 0.18,
 }
 
@@ -37,7 +37,8 @@ local currentAllEggsQuery = ""
 local isMinimized = false
 
 local homeCFrame = nil
-local isFalling = false
+local isFlyingToEgg = false
+local customGravity = 0
 
 --==================================================
 -- HÀM HỖ TRỢ
@@ -112,15 +113,18 @@ local function getAllEggNamesInGame()
     return names
 end
 
+-- Xử lý Noclip và chống trọng lực khi đang bay nhặt trứng khó (như Volcanic Egg)
 RunService.Stepped:Connect(function()
-    if isFalling then
-        local char = getCharacter()
-        if char then
+    local char = getCharacter()
+    if char then
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if isFlyingToEgg and root then
             for _, part in ipairs(char:GetDescendants()) do
                 if part:IsA("BasePart") then
                     part.CanCollide = false
                 end
             end
+            root.Velocity = Vector3.new(0, 0, 0) -- Giữ lơ lửng không bị rơi rớt
         end
     end
 end)
@@ -218,7 +222,7 @@ local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, -50, 1, 0)
 TitleLabel.Position = UDim2.new(0, 15, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "Egg Tool - AutoFarm Fixed"
+TitleLabel.Text = "Egg Tool - Volcanic Fix"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 14
 TitleLabel.Font = Enum.Font.GothamBold
@@ -320,7 +324,7 @@ local function styleSmallBtn(btn, color)
     btn.MouseLeave:Connect(function() tween(btn, {BackgroundTransparency = 0}, 0.1) end)
 end
 
--- ================== CÀI ĐẶT TAB (Đã bỏ nút Đặt Nhà) ==================
+-- ================== CÀI ĐẶT TAB ==================
 local ToggleGlobalESPBtn = Instance.new("TextButton")
 ToggleGlobalESPBtn.Size = UDim2.new(1, -20, 0, 35)
 ToggleGlobalESPBtn.Position = UDim2.new(0, 10, 0, 10)
@@ -353,7 +357,6 @@ ToggleAutoFarmBtn.MouseButton1Click:Connect(function()
     ToggleAutoFarmBtn.Text = autoFarmActive and "▶ Đang Auto Farm: ON" or "▶ Bắt Đầu Auto Farm: OFF"
     ToggleAutoFarmBtn.TextColor3 = autoFarmActive and Color3.fromRGB(0, 255, 127) or Color3.fromRGB(220, 220, 220)
     
-    -- Tự động lưu vị trí hiện tại làm Nhà ngay khi bật Auto Farm nếu chưa có
     if autoFarmActive and not homeCFrame then
         local root = getRootPart()
         if root then homeCFrame = root.CFrame end 
@@ -564,12 +567,11 @@ SearchBoxAll:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 --==================================================
--- LOGIC AUTO FARM LOOP (Đã sửa lỗi kẹt không về nhà)
+-- LOGIC AUTO FARM LOOP (Tích hợp Bay + Noclip cho trứng khó như Volcanic)
 --==================================================
 task.spawn(function()
     while task.wait(0.2) do
         if autoFarmActive then
-            -- Nếu chưa có vị trí nhà, tự động lưu vị trí hiện tại
             local root = getRootPart()
             if root and not homeCFrame then
                 homeCFrame = root.CFrame
@@ -589,29 +591,31 @@ task.spawn(function()
                 local targetPos = getTargetPosition(targetEgg)
                 
                 if root and targetPos then
-                    -- 1. Lưu lại điểm xuất phát trước khi đi farm để chắc chắn về lại được
                     local currentReturnCFrame = homeCFrame
 
-                    -- 2. Dịch chuyển tới trứng
-                    root.CFrame = CFrame.new(targetPos + Vector3.new(0, 4, 0))
-                    task.wait(0.3) 
-                    
-                    -- 3. Kích hoạt Prompt nhặt trứng
-                    local prompt = targetEgg:FindFirstChildWhichIsA("ProximityPrompt", true)
-                    if prompt then
-                        pcall(function()
-                            fireproximityprompt(prompt, 1)
-                        end)
-                    end
+                    -- 1. Bật chế độ bay lơ lửng + xuyên tường (Noclip)
+                    isFlyingToEgg = true
+
+                    -- 2. Dịch chuyển thẳng tới sát vị trí trứng (bay qua mọi vật cản)
+                    root.CFrame = CFrame.new(targetPos + Vector3.new(0, 3, 0))
                     task.wait(0.4) 
                     
-                    -- 4. Kích hoạt Noclip rơi xuống tránh kẹt địa hình
-                    isFalling = true
-                    root.Velocity = Vector3.new(0, -60, 0) 
-                    task.wait(1.2) 
-                    isFalling = false
+                    -- 3. Kích hoạt ProximityPrompt nhiều lần liên tục để ép nhặt quả trứng khó
+                    local prompt = targetEgg:FindFirstChildWhichIsA("ProximityPrompt", true)
+                    if prompt then
+                        for i = 1, 3 do
+                            pcall(function()
+                                fireproximityprompt(prompt, 1)
+                            end)
+                            task.wait(0.15)
+                        end
+                    end
+                    task.wait(0.3) 
                     
-                    -- 5. Bắt buộc dịch chuyển về nhà (Fix lỗi đứng ì ở chỗ trứng)
+                    -- 4. Tắt chế độ bay
+                    isFlyingToEgg = false
+                    
+                    -- 5. Dịch chuyển trở về nhà an toàn
                     if root and currentReturnCFrame then
                         root.CFrame = currentReturnCFrame
                     end
