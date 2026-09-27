@@ -1,5 +1,5 @@
 --[[
-    Eggs Tool - Pro Version (Fixed ESP Text & Egg Luck Display)
+    Eggs Tool - Pro Version (Auto Farm Fix & Removed SetHome Button)
 ]] 
 
 local Players = game:GetService("Players")
@@ -18,7 +18,7 @@ local Config = {
     GlobalESPColor = Color3.fromRGB(170, 85, 255),
     CustomESPColor = Color3.fromRGB(0, 255, 127), 
     MenuWidth = 480,
-    MenuHeight = 310, 
+    MenuHeight = 270, -- Thu nhỏ chiều cao menu lại một chút do đã bỏ bớt 1 nút
     AnimationTime = 0.18,
 }
 
@@ -79,7 +79,6 @@ local function getEggImage(eggName)
     return img ~= "" and img or "rbxassetid://10651105078"
 end
 
--- SỬA LỖI KHÔNG HIỆN MAY MẮN: Đọc trực tiếp từ UI Index trong PlayerGui của game
 local function getEggLuck(eggName)
     local luck = "??"
     pcall(function()
@@ -127,7 +126,7 @@ RunService.Stepped:Connect(function()
 end)
 
 --==================================================
--- CORE ESP (SỬA LỖI HIỆN CHỮ TÊN TRỨNG TRÊN ĐẦU)
+-- CORE ESP
 --==================================================
 local function updateEggESP(egg)
     if not egg or (not egg:IsA("Model") and not egg:IsA("BasePart")) then return end
@@ -141,7 +140,6 @@ local function updateEggESP(egg)
     local color = data.CustomActive and data.CustomColor or Config.GlobalESPColor
 
     if shouldShow then
-        -- Xử lý Highlight
         if not data.Highlight or not data.Highlight.Parent then
             local highlight = Instance.new("Highlight")
             highlight.Name = "EggESP_Highlight"
@@ -155,7 +153,6 @@ local function updateEggESP(egg)
         data.Highlight.OutlineColor = color
         data.Highlight.Enabled = true
 
-        -- Xử lý BillboardGui (Hiển thị chữ tên trứng)
         if not data.Billboard or not data.Billboard.Parent then
             local bgui = Instance.new("BillboardGui")
             bgui.Name = "EggESP_Text"
@@ -221,7 +218,7 @@ local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, -50, 1, 0)
 TitleLabel.Position = UDim2.new(0, 15, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "Egg Tool - Fixed Version"
+TitleLabel.Text = "Egg Tool - AutoFarm Fixed"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 14
 TitleLabel.Font = Enum.Font.GothamBold
@@ -323,7 +320,7 @@ local function styleSmallBtn(btn, color)
     btn.MouseLeave:Connect(function() tween(btn, {BackgroundTransparency = 0}, 0.1) end)
 end
 
--- ================== CÀI ĐẶT TAB ==================
+-- ================== CÀI ĐẶT TAB (Đã bỏ nút Đặt Nhà) ==================
 local ToggleGlobalESPBtn = Instance.new("TextButton")
 ToggleGlobalESPBtn.Size = UDim2.new(1, -20, 0, 35)
 ToggleGlobalESPBtn.Position = UDim2.new(0, 10, 0, 10)
@@ -341,29 +338,9 @@ ToggleGlobalESPBtn.MouseButton1Click:Connect(function()
     updateAllESP()
 end)
 
-local SetHomeBtn = Instance.new("TextButton")
-SetHomeBtn.Size = UDim2.new(1, -20, 0, 35)
-SetHomeBtn.Position = UDim2.new(0, 10, 0, 55)
-SetHomeBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-SetHomeBtn.Text = "📍 Đặt Vị Trí Hiện Tại Làm 'Nhà'"
-SetHomeBtn.TextColor3 = Color3.fromRGB(255, 200, 50)
-SetHomeBtn.Font = Enum.Font.GothamBold
-SetHomeBtn.Parent = SettingsContainer
-Instance.new("UICorner", SetHomeBtn).CornerRadius = UDim.new(0, 6)
-
-SetHomeBtn.MouseButton1Click:Connect(function()
-    local root = getRootPart()
-    if root then
-        homeCFrame = root.CFrame
-        SetHomeBtn.Text = "📍 Đã Lưu Vị Trí Nhà!"
-        task.wait(1.5)
-        SetHomeBtn.Text = "📍 Đặt Vị Trí Hiện Tại Làm 'Nhà'"
-    end
-end)
-
 local ToggleAutoFarmBtn = Instance.new("TextButton")
 ToggleAutoFarmBtn.Size = UDim2.new(1, -20, 0, 35)
-ToggleAutoFarmBtn.Position = UDim2.new(0, 10, 0, 100)
+ToggleAutoFarmBtn.Position = UDim2.new(0, 10, 0, 55)
 ToggleAutoFarmBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
 ToggleAutoFarmBtn.Text = "▶ Bắt Đầu Auto Farm: OFF"
 ToggleAutoFarmBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -375,6 +352,8 @@ ToggleAutoFarmBtn.MouseButton1Click:Connect(function()
     autoFarmActive = not autoFarmActive
     ToggleAutoFarmBtn.Text = autoFarmActive and "▶ Đang Auto Farm: ON" or "▶ Bắt Đầu Auto Farm: OFF"
     ToggleAutoFarmBtn.TextColor3 = autoFarmActive and Color3.fromRGB(0, 255, 127) or Color3.fromRGB(220, 220, 220)
+    
+    -- Tự động lưu vị trí hiện tại làm Nhà ngay khi bật Auto Farm nếu chưa có
     if autoFarmActive and not homeCFrame then
         local root = getRootPart()
         if root then homeCFrame = root.CFrame end 
@@ -585,11 +564,17 @@ SearchBoxAll:GetPropertyChangedSignal("Text"):Connect(function()
 end)
 
 --==================================================
--- LOGIC AUTO FARM LOOP
+-- LOGIC AUTO FARM LOOP (Đã sửa lỗi kẹt không về nhà)
 --==================================================
 task.spawn(function()
     while task.wait(0.2) do
-        if autoFarmActive and homeCFrame then
+        if autoFarmActive then
+            -- Nếu chưa có vị trí nhà, tự động lưu vị trí hiện tại
+            local root = getRootPart()
+            if root and not homeCFrame then
+                homeCFrame = root.CFrame
+            end
+
             local targetEgg = nil
             for _, egg in ipairs(RenderedEggsFolder:GetChildren()) do
                 if (egg:IsA("Model") or egg:IsA("BasePart")) then
@@ -600,27 +585,37 @@ task.spawn(function()
                 end
             end
             
-            if targetEgg and targetEgg.Parent then
-                local root = getRootPart()
+            if targetEgg and targetEgg.Parent and homeCFrame then
                 local targetPos = getTargetPosition(targetEgg)
                 
                 if root and targetPos then
+                    -- 1. Lưu lại điểm xuất phát trước khi đi farm để chắc chắn về lại được
+                    local currentReturnCFrame = homeCFrame
+
+                    -- 2. Dịch chuyển tới trứng
                     root.CFrame = CFrame.new(targetPos + Vector3.new(0, 4, 0))
-                    task.wait(0.5) 
+                    task.wait(0.3) 
                     
+                    -- 3. Kích hoạt Prompt nhặt trứng
                     local prompt = targetEgg:FindFirstChildWhichIsA("ProximityPrompt", true)
                     if prompt then
-                        fireproximityprompt(prompt, 1)
+                        pcall(function()
+                            fireproximityprompt(prompt, 1)
+                        end)
                     end
-                    task.wait(0.5) 
+                    task.wait(0.4) 
                     
+                    -- 4. Kích hoạt Noclip rơi xuống tránh kẹt địa hình
                     isFalling = true
                     root.Velocity = Vector3.new(0, -60, 0) 
-                    task.wait(1.5) 
+                    task.wait(1.2) 
                     isFalling = false
                     
-                    root.CFrame = homeCFrame
-                    task.wait(1) 
+                    -- 5. Bắt buộc dịch chuyển về nhà (Fix lỗi đứng ì ở chỗ trứng)
+                    if root and currentReturnCFrame then
+                        root.CFrame = currentReturnCFrame
+                    end
+                    task.wait(0.8) 
                 end
             end
         end
